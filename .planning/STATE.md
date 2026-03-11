@@ -26,24 +26,24 @@ See: .planning/PROJECT.md (updated 2026-03-10)
 ## Current Position
 
 Phase: 1 of 4 (Auth Foundation)
-Plan: 1 of 4 in current phase
+Plan: 2 of 4 in current phase
 Status: Executing
-Last activity: 2026-03-11 — Completed plan 01-00 (test infrastructure)
+Last activity: 2026-03-11 — Completed plan 01-01 (auth infrastructure)
 
-Progress: [███░░░░░░░] 25%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
+- Total plans completed: 2
 - Average duration: 2min
-- Total execution time: 2min
+- Total execution time: 4min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-auth-foundation | 1/4 | 2min | 2min |
+| 01-auth-foundation | 2/4 | 4min | 2min |
 
 **Recent Trend:**
 - Last 5 plans: —
@@ -58,6 +58,8 @@ Progress: [███░░░░░░░] 25%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- Used getUser() instead of getClaims() in middleware — getClaims() not in supabase-js v2.99
+- No ip_address in pin_attempts — unnecessary for kid's app on shared family device
 - Node environment for vitest (server actions are server-side, not jsdom)
 - Globals enabled in vitest so describe/it/expect available without imports
 - PIN + magic link auth (not OAuth): 9-year-olds don't have email; PIN is fast for daily use
@@ -77,6 +79,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T07:52:18Z
-Stopped at: Completed 01-00-PLAN.md
-Resume file: .planning/phases/01-auth-foundation/01-00-SUMMARY.md
+Last session: 2026-03-11T07:52:21Z
+Stopped at: Completed 01-01-PLAN.md
+Resume file: .planning/phases/01-auth-foundation/01-01-SUMMARY.md
