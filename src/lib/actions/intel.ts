@@ -146,7 +146,8 @@ export async function uploadIntel(
   const rows = chunks.map((content, idx) => ({
     profile_id: userId,
     content,
-    embedding: JSON.stringify(embeddings[idx]),
+    // pgvector expects "[0.1,0.2,...]" format — bracket notation, not JSON-stringified array
+    embedding: `[${embeddings[idx].join(",")}]`,
     metadata: {
       source: file.name,
       uploadedAt,
@@ -160,6 +161,7 @@ export async function uploadIntel(
     .insert(rows);
 
   if (insertError) {
+    console.error("[uploadIntel] DB insert error:", insertError.message);
     return { success: false, error: "Failed to store intel in knowledge base" };
   }
 
