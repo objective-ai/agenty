@@ -211,3 +211,34 @@ body {
   animation-name: comms-bar-idle;
   animation-duration: 1.2s;
 }
+
+/* ── Agent Switch Glitch Effect ────────────────────────────────── */
+@keyframes agent-glitch {
+  0%, 100% { opacity: 1; filter: none; }
+  10% { opacity: 0.8; filter: hue-rotate(90deg) brightness(1.5); }
+  20% { opacity: 0.9; transform: translateX(-2px); }
+  30% { filter: hue-rotate(-90deg) brightness(0.8); }
+  40% { transform: translateX(2px); filter: none; }
+  50% { opacity: 0.7; }
+  60% { filter: saturate(2) brightness(1.2); }
+  70% { transform: translateX(-1px); }
+  80% { opacity: 0.9; filter: none; }
+}
+
+.agent-glitch-active {
+  animation: agent-glitch 0.8s ease-in-out;
+}
+
+/* ── Holographic Grid Background ───────────────────────────────── */
+@keyframes holo-grid-scroll {
+  from { background-position: 0 0; }
+  to { background-position: 40px 40px; }
+}
+
+.holo-grid-bg {
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: holo-grid-scroll 4s linear infinite;
+}
