@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import OpenAI from "openai";
+import { PDFParse } from "pdf-parse";
 
 // ── Result Types ────────────────────────────────────────────────────────────
 export interface ActionSuccess<T> {
@@ -108,12 +109,11 @@ export async function uploadIntel(
   let rawText: string;
   try {
     const buffer = Buffer.from(await file.arrayBuffer());
-    // pdf-parse v2: ESM named export; pass buffer via the 'data' option field
-    const { PDFParse } = await import("pdf-parse");
     const parser = new PDFParse({ data: buffer });
     const result = await parser.getText();
     rawText = result.text;
-  } catch {
+  } catch (err) {
+    console.error("[uploadIntel] PDF parse error:", err);
     return { success: false, error: "Failed to parse PDF" };
   }
 
