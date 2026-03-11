@@ -4,12 +4,67 @@ import { useState, useEffect, useCallback, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { loginWithPin, sendMagicLink } from "@/lib/actions/auth";
 
+// ─── Cooper Holographic Avatar ──────────────────────────────────
+function CooperAvatar() {
+  return (
+    <div className="relative mb-6 flex items-center justify-center">
+      {/* Outer ring glow */}
+      <div className="absolute h-28 w-28 rounded-full bg-[#3B82F6]/10 animate-pulse" />
+      <div className="absolute h-24 w-24 rounded-full border border-[#3B82F6]/30" />
+      {/* Avatar frame */}
+      <div
+        className="relative flex h-20 w-20 items-center justify-center rounded-full
+                   border-2 border-[#3B82F6]/60 bg-[#0A1423]
+                   shadow-[0_0_24px_rgba(59,130,246,0.35)]"
+      >
+        {/* Holographic Cooper icon — tactical visor silhouette */}
+        <svg
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-12 w-12"
+        >
+          {/* Head */}
+          <circle cx="24" cy="16" r="9" fill="#1E3A5F" stroke="#3B82F6" strokeWidth="1.5" />
+          {/* Visor */}
+          <rect x="15" y="13" width="18" height="6" rx="3" fill="#3B82F6" opacity="0.85" />
+          {/* Visor glint */}
+          <rect x="17" y="14.5" width="5" height="2" rx="1" fill="white" opacity="0.4" />
+          {/* HUD dots */}
+          <circle cx="17" cy="16" r="1" fill="#60A5FA" />
+          <circle cx="31" cy="16" r="1" fill="#60A5FA" />
+          {/* Shoulders / body */}
+          <path
+            d="M10 40 C10 30 14 27 24 27 C34 27 38 30 38 40"
+            fill="#0F2744"
+            stroke="#3B82F6"
+            strokeWidth="1.5"
+          />
+          {/* Chest emblem */}
+          <polygon points="24,31 27,36 21,36" fill="#3B82F6" opacity="0.8" />
+          {/* Scan line */}
+          <line x1="10" y1="16" x2="15" y2="16" stroke="#3B82F6" strokeWidth="1" opacity="0.6" />
+          <line x1="33" y1="16" x2="38" y2="16" stroke="#3B82F6" strokeWidth="1" opacity="0.6" />
+        </svg>
+        {/* Status dot */}
+        <span className="absolute bottom-1 right-1 h-2.5 w-2.5 rounded-full bg-[#3B82F6] shadow-[0_0_6px_#3B82F6]" />
+      </div>
+      {/* Scanline overlay */}
+      <div className="absolute h-20 w-20 rounded-full overflow-hidden opacity-10 pointer-events-none">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="w-full h-px bg-[#3B82F6]" style={{ marginTop: `${i * 13}px` }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Cooper Greetings ───────────────────────────────────────────
 const COOPER_GREETINGS = [
-  "Ready for your mission, Agent?",
-  "Stats are looking good. Enter your code.",
+  "Stats are looking good. Ready to secure some Gold today?",
   "Base systems online. Authenticate to proceed.",
-  "Welcome back, operative. PIN required.",
+  "Analyze your objective. Execute the mission.",
+  "All systems nominal. Enter your code, Agent.",
 ];
 
 function getGreeting() {
@@ -229,11 +284,14 @@ export default function LoginPage() {
   const [showParentForm, setShowParentForm] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [greeting] = useState(getGreeting);
+  const [displayName, setDisplayName] = useState<string | null>(null);
 
-  // Load kidEmail from localStorage on mount
+  // Load kidEmail and displayName from localStorage on mount
   useEffect(() => {
     const stored = localStorage.getItem("agenty_kid_email");
     if (stored) setKidEmail(stored);
+    const name = localStorage.getItem("agenty_display_name");
+    if (name) setDisplayName(name);
     setMounted(true);
   }, []);
 
@@ -391,15 +449,27 @@ export default function LoginPage() {
       data-agent="cooper"
     >
       {/* Logo */}
-      <div className="mb-6 text-center">
+      <div className="mb-4 text-center">
         <h1 className="mb-1 text-2xl font-black tracking-tight text-[#F0E6D3]">
           AGENTY
         </h1>
         <p className="text-xs text-[#A8977E]">Quest for Knowledge</p>
       </div>
 
-      {/* Cooper Greeting */}
-      <p className="mb-8 text-sm font-medium text-[#3B82F6]">{greeting}</p>
+      {/* Cooper Holographic Avatar */}
+      <CooperAvatar />
+
+      {/* Personalized Greeting */}
+      <div className="mb-8 text-center">
+        {displayName ? (
+          <p className="text-base font-bold text-[#F0E6D3]">
+            Welcome back, Agent{" "}
+            <span className="text-[#3B82F6]">{displayName}</span>
+          </p>
+        ) : (
+          <p className="text-sm font-medium text-[#3B82F6]">{greeting}</p>
+        )}
+      </div>
 
       {/* Lockout or PIN Area */}
       {lockout ? (

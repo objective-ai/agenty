@@ -55,6 +55,7 @@ export default function SetupPage() {
     if (result.kidEmail) {
       // Save to localStorage for this device
       localStorage.setItem("agenty_kid_email", result.kidEmail);
+      localStorage.setItem("agenty_display_name", displayName || "Adventurer");
       setKidEmail(result.kidEmail);
       setStep(2);
     }
