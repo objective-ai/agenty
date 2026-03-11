@@ -150,11 +150,27 @@ function MagicLinkForm({ onBack }: { onBack?: () => void }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 w-full max-w-xs">
-      <h2 className="text-lg font-bold text-[#F0E6D3]">Parent Setup Required</h2>
-      <p className="text-xs text-[#A8977E] text-center">
-        Enter your email to receive a magic link for setting up your agent&apos;s
-        account.
-      </p>
+      {!onBack && (
+        <>
+          <h2 className="text-lg font-bold text-[#F0E6D3]">
+            Parent Setup Required
+          </h2>
+          <p className="text-xs text-[#A8977E] text-center">
+            No agent account found on this device. Enter your email to receive a
+            setup link.
+          </p>
+        </>
+      )}
+      {onBack && (
+        <>
+          <h2 className="text-lg font-bold text-[#F0E6D3]">
+            Send Setup Link
+          </h2>
+          <p className="text-xs text-[#A8977E] text-center">
+            Need to set up a new agent account? Enter your email below.
+          </p>
+        </>
+      )}
       <input
         type="email"
         value={email}
