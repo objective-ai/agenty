@@ -1,0 +1,59 @@
+<svg
+  viewBox="0 0 280 100"
+  width="100%"
+  height="auto"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- Water -->
+  <path
+    d="M16 72 Q46 68 76 72 Q106 76 136 72 Q166 68 196 72 Q226 76 256 72 Q266 70 264 72"
+    stroke="#3B82F6"
+    stroke-width="0.6"
+    stroke-opacity="0.25"
+  />
+
+  <!-- SPAN: deck line — id="span" -->
+  <line
+    id="span"
+    x1="16" y1="62" x2="264" y2="62"
+    stroke="#3B82F6"
+    stroke-width="2"
+    stroke-opacity="0.5"
+  />
+
+  <!-- TOWERS: both towers as a group — id="towers" -->
+  <g id="towers" stroke="#3B82F6" stroke-width="2" stroke-opacity="0.6">
+    <!-- Left tower -->
+    <line x1="80" y1="15" x2="80" y2="62" />
+    <!-- Right tower -->
+    <line x1="200" y1="15" x2="200" y2="62" />
+  </g>
+
+  <!-- CABLES: all cable lines — id="cables" -->
+  <g id="cables" stroke="#3B82F6" stroke-width="0.9" stroke-opacity="0.4">
+    <!-- Left tower cables -->
+    <line x1="80" y1="17" x2="20" y2="62" />
+    <line x1="80" y1="17" x2="44" y2="62" />
+    <line x1="80" y1="17" x2="62" y2="62" />
+    <line x1="80" y1="17" x2="98" y2="62" />
+    <line x1="80" y1="17" x2="116" y2="62" />
+    <!-- Right tower cables -->
+    <line x1="200" y1="17" x2="260" y2="62" />
+    <line x1="200" y1="17" x2="236" y2="62" />
+    <line x1="200" y1="17" x2="218" y2="62" />
+    <line x1="200" y1="17" x2="182" y2="62" />
+    <line x1="200" y1="17" x2="164" y2="62" />
+  </g>
+
+  <!-- Label -->
+  <text
+    x="140"
+    y="94"
+    text-anchor="middle"
+    font-size="8"
+    fill="#3B82F644"
+    font-family="monospace"
+    letter-spacing="2"
+  >DRAGON BRIDGE · DA NANG</text>
+</svg>

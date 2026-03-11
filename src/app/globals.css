@@ -277,3 +277,30 @@ body {
   animation: spin-coin 3s linear infinite;
   display: inline-block;
 }
+
+/* ═══════════════════════════════════════════
+   Mission Mode — Blueprint SVG Highlight States
+   ═══════════════════════════════════════════ */
+
+/* Ghost state pulsing dots */
+@keyframes ghostPulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+.animate-ghost-pulse {
+  animation: ghostPulse 2s ease-in-out infinite;
+}
+
+/* Active highlight — 900ms, removed by BlueprintDiagram useEffect */
+[data-highlight="true"] {
+  filter: drop-shadow(0 0 10px #00f0ff);
+  stroke-opacity: 1 !important;
+  transition: filter 0.15s, stroke-opacity 0.15s;
+}
+
+/* Permanent solved glow */
+[data-solved="true"] {
+  filter: drop-shadow(0 0 5px #10B981);
+  stroke-opacity: 0.85 !important;
+  transition: filter 0.3s, stroke-opacity 0.3s;
+}

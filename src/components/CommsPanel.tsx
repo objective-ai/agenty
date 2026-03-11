@@ -12,6 +12,9 @@ import { DefaultChatTransport } from "ai";
 import { useAgent } from "@/contexts/AgentContext";
 import { HolographicAvatar } from "@/components/HolographicAvatar";
 import type { UIMessage } from "ai";
+import type { Dispatch } from "react";
+import type { MissionConfig } from "@/lib/missions/registry";
+import type { MissionAction } from "@/lib/missions/missionReducer";
 
 function getTextContent(message: UIMessage): string {
   return message.parts
@@ -20,7 +23,12 @@ function getTextContent(message: UIMessage): string {
     .join("");
 }
 
-export function CommsPanel() {
+type CommsPanelProps = {
+  missionConfig?: MissionConfig;
+  dispatchMission?: Dispatch<MissionAction>;
+};
+
+export function CommsPanel({ missionConfig, dispatchMission }: CommsPanelProps = {}) {
   const { agent, activeAgent } = useAgent();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [inputValue, setInputValue] = useState("");
@@ -30,9 +38,9 @@ export function CommsPanel() {
     () =>
       new DefaultChatTransport({
         api: "/api/chat",
-        body: { agentId: activeAgent },
+        body: { agentId: activeAgent, missionId: missionConfig?.id ?? null },
       }),
-    [activeAgent]
+    [activeAgent, missionConfig?.id]
   );
 
   const { messages, sendMessage, status } = useChat({ transport });
@@ -45,6 +53,39 @@ export function CommsPanel() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Track processed message IDs to prevent duplicate dispatches when messages array
+  // appends new entries (user text after tool call) and re-triggers the effect
+  const processedMsgIds = useRef<Set<string>>(new Set());
+
+  // Intercept Cooper's tool calls from AI SDK v6 message parts
+  useEffect(() => {
+    if (!dispatchMission) return;
+    const lastMsg = messages[messages.length - 1];
+    if (!lastMsg || lastMsg.role !== "assistant") return;
+    // Skip if we've already processed this message
+    if (processedMsgIds.current.has(lastMsg.id)) return;
+    processedMsgIds.current.add(lastMsg.id);
+
+    for (const part of lastMsg.parts) {
+      // AI SDK v6: server-only tools surface as DynamicToolUIPart with type "dynamic-tool"
+      if (part.type === "dynamic-tool") {
+        const toolPart = part as unknown as { type: "dynamic-tool"; toolName: string; input: unknown; state: string };
+        if (toolPart.state !== "input-available" && toolPart.state !== "output-available") continue;
+        if (toolPart.toolName === "initMission") {
+          dispatchMission({
+            type: "MISSION_INIT",
+            payload: toolPart.input as { objective: string },
+          });
+        } else if (toolPart.toolName === "updateStat") {
+          dispatchMission({
+            type: "STAT_UPDATE",
+            payload: toolPart.input as { id: string; value: number; objective?: string },
+          });
+        }
+      }
+    }
+  }, [messages, dispatchMission]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

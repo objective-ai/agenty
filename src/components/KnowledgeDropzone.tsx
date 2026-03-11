@@ -16,7 +16,7 @@ type UploadState =
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function KnowledgeDropzone() {
+export function KnowledgeDropzone({ onSuccess }: { onSuccess?: () => void } = {}) {
   const { agent } = useAgent();
   const [uploadState, setUploadState] = useState<UploadState>({ status: "idle" });
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -41,11 +41,12 @@ export function KnowledgeDropzone() {
           chunkCount: result.data.chunkCount,
           fileName: result.data.fileName,
         });
+        onSuccess?.();
       } else {
         setUploadState({ status: "error", message: result.error });
       }
     },
-    []
+    [onSuccess]
   );
 
   // ── Drag-and-drop handlers ────────────────────────────────────────────────

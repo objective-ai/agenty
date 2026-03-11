@@ -474,19 +474,32 @@ The 900ms timer MUST be reset on each `highlightId` change. `BlueprintDiagram` a
 
 ```tsx
 const svgRef = useRef<SVGSVGElement>(null);
+// useRef for timer ID — ensures rapid successive tool calls clear the previous
+// timer immediately, preventing premature HIGHLIGHT_CLEAR flickering
+const highlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 useEffect(() => {
+  // Clear any in-flight timer first — covers rapid double tool calls
+  if (highlightTimerRef.current) {
+    clearTimeout(highlightTimerRef.current);
+    highlightTimerRef.current = null;
+  }
+
   if (!highlightId || !svgRef.current) return;
   const el = svgRef.current.querySelector(`#${highlightId}`);
   if (!el) return;
 
   el.setAttribute('data-highlight', 'true');
-  const t = setTimeout(() => {
+  highlightTimerRef.current = setTimeout(() => {
     el.removeAttribute('data-highlight');
+    highlightTimerRef.current = null;
     dispatchMission({ type: 'HIGHLIGHT_CLEAR' });
   }, 900);
   return () => {
-    clearTimeout(t);
+    if (highlightTimerRef.current) {
+      clearTimeout(highlightTimerRef.current);
+      highlightTimerRef.current = null;
+    }
     el.removeAttribute('data-highlight');
   };
 }, [highlightId, dispatchMission]);
