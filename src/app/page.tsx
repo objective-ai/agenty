@@ -462,9 +462,8 @@ export default function LoginPage() {
       {/* Personalized Greeting */}
       <div className="mb-8 text-center">
         {displayName ? (
-          <p className="text-base font-bold text-[#F0E6D3]">
-            Welcome back, Agent{" "}
-            <span className="text-[#3B82F6]">{displayName}</span>
+          <p className="text-base font-bold">
+            <span className="text-[#F0E6D3]">Welcome back, Agent </span><span className="text-base font-bold text-[#3B82F6]">{displayName}</span>
           </p>
         ) : (
           <p className="text-sm font-medium text-[#3B82F6]">{greeting}</p>
