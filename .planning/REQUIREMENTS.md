@@ -18,12 +18,12 @@ Requirements for Phase 2 milestone. Each maps to roadmap phases.
 
 ### The Bridge Dashboard
 
-- [ ] **DASH-01**: Agent selection (Cooper, Arlo, Minh, Maya) is the primary landing experience on The Bridge
-- [ ] **DASH-02**: Player stats (gold, XP, energy) are fetched from Supabase via Server Component layout, not hardcoded
-- [ ] **DASH-03**: EconomyContext hydrates from server-fetched data — no client-side loading waterfall
-- [ ] **DASH-04**: Daily reward claim button wired to `awardLoot()` Server Action
-- [ ] **DASH-05**: Quest start button wired to `spendEnergy()` Server Action
-- [ ] **DASH-06**: Agent selection persists across page navigations within the session
+- [x] **DASH-01**: Agent selection (Cooper, Arlo, Minh, Maya) is the primary landing experience on The Bridge
+- [x] **DASH-02**: Player stats (gold, XP, energy) are fetched from Supabase via Server Component layout, not hardcoded
+- [x] **DASH-03**: EconomyContext hydrates from server-fetched data — no client-side loading waterfall
+- [x] **DASH-04**: Daily reward claim button wired to `awardLoot()` Server Action
+- [x] **DASH-05**: Quest start button wired to `spendEnergy()` Server Action
+- [x] **DASH-06**: Agent selection persists across page navigations within the session
 
 ### Economy & Reward Loop
 
@@ -96,12 +96,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-04 | Phase 1 | Complete |
 | AUTH-05 | Phase 1 | Complete |
 | AUTH-06 | Phase 1 | Complete |
-| DASH-01 | Phase 2 | Pending |
-| DASH-02 | Phase 2 | Pending |
-| DASH-03 | Phase 2 | Pending |
-| DASH-04 | Phase 2 | Pending |
-| DASH-05 | Phase 2 | Pending |
-| DASH-06 | Phase 2 | Pending |
+| DASH-01 | Phase 2 | Complete |
+| DASH-02 | Phase 2 | Complete |
+| DASH-03 | Phase 2 | Complete |
+| DASH-04 | Phase 2 | Complete |
+| DASH-05 | Phase 2 | Complete |
+| DASH-06 | Phase 2 | Complete |
 | ECON-01 | Phase 3 | Pending |
 | ECON-02 | Phase 3 | Pending |
 | ECON-03 | Phase 3 | Pending |
