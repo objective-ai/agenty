@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-03-11T07:52:21Z"
-last_activity: 2026-03-11 — Completed plan 01-01 (auth infrastructure)
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-03-11T08:00:04.158Z"
+last_activity: 2026-03-11 — Completed plan 01-02 (auth server actions)
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
-  percent: 50
+  completed_plans: 3
+  percent: 75
 ---
 
 # Project State
@@ -26,24 +26,24 @@ See: .planning/PROJECT.md (updated 2026-03-10)
 ## Current Position
 
 Phase: 1 of 4 (Auth Foundation)
-Plan: 2 of 4 in current phase
+Plan: 3 of 4 in current phase
 Status: Executing
-Last activity: 2026-03-11 — Completed plan 01-01 (auth infrastructure)
+Last activity: 2026-03-11 — Completed plan 01-02 (auth server actions)
 
-Progress: [█████░░░░░] 50%
+Progress: [████████░░] 75%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
+- Total plans completed: 3
 - Average duration: 2min
-- Total execution time: 4min
+- Total execution time: 7min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-auth-foundation | 2/4 | 4min | 2min |
+| 01-auth-foundation | 3/4 | 7min | 2min |
 
 **Recent Trend:**
 - Last 5 plans: —
@@ -66,6 +66,8 @@ Recent decisions affecting current work:
 - Cooper hosts demo quest: proves the full reward loop with one agent before expanding
 - No component libraries: Adventure game aesthetic can't be achieved with default UI kits
 - Import from `motion/react` not `framer-motion`: avoids React 19 hydration errors
+- Used service-role RPC (get_uid_by_email) instead of getUserByEmail -- method missing in supabase-js v2.99
+- PIN stored as Supabase auth password (Supabase handles bcrypt hashing) -- no custom hash logic
 
 ### Pending Todos
 
@@ -79,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T07:52:21Z
-Stopped at: Completed 01-01-PLAN.md
-Resume file: .planning/phases/01-auth-foundation/01-01-SUMMARY.md
+Last session: 2026-03-11T08:00:04.156Z
+Stopped at: Completed 01-02-PLAN.md
+Resume file: None
