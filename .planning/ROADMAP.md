@@ -1,4 +1,4 @@
-# Roadmap: Agenty — Quest for Knowledge
+# Roadmap: Agenty — Your AI Quest for Knowledge
 
 ## Overview
 
@@ -28,7 +28,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Kid can enter a 6-digit PIN on the login screen and land on The Bridge dashboard
   3. After 5 wrong PIN attempts within 15 minutes the input locks and shows a lockout message
   4. Visiting `/bridge` without a session redirects to the login page; visiting it with a valid session passes through
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Auth infrastructure: middleware, PKCE callback, pin_attempts migration
+- [ ] 01-02-PLAN.md — Auth server actions: magic link, child account setup, PIN login with rate limiting
+- [ ] 01-03-PLAN.md — Auth UI: PIN login page, parent setup page, bridge shell
 
 ### Phase 2: Dashboard Shell
 **Goal**: The Bridge dashboard renders with live gold, XP, and energy from Supabase, the chosen agent's neon theme is applied throughout, and the AnimatedNumber primitive is available for all subsequent reward animations.
@@ -71,7 +76,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Auth Foundation | 0/TBD | Not started | - |
+| 1. Auth Foundation | 0/3 | Planning complete | - |
 | 2. Dashboard Shell | 0/TBD | Not started | - |
 | 3. Reward Loop | 0/TBD | Not started | - |
 | 4. Animation Polish | 0/TBD | Not started | - |
