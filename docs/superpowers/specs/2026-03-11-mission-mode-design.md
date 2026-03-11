@@ -173,7 +173,7 @@ export function initialState(config: MissionConfig): MissionState {
 // src/components/MissionModeShell.tsx
 'use client';
 import { useReducer, useEffect, useState } from 'react';
-import { AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { missionReducer, initialState, MissionAction } from '@/lib/missions/missionReducer';
 
 export function MissionModeShell({ config }: { config: MissionConfig }) {
@@ -299,14 +299,20 @@ const result = streamText({
 const transport = useMemo(
   () =>
     new DefaultChatTransport({
-      url: '/api/chat',
+      api: '/api/chat',    // DefaultChatTransport uses `api`, not `url`
       body: { agentId: activeAgent, missionId: missionConfig?.id ?? null },
     }),
   [activeAgent, missionConfig?.id]
 );
 ```
 
-The route reads `const { missionId } = await req.json()` (in addition to existing fields).
+The route adds `missionId` to the **existing** `req.json()` destructure — do NOT call `req.json()` a second time (the Request body stream can only be consumed once). Find the existing destructure in `route.ts` and expand it:
+```ts
+// Before:
+const { messages, agentId = "cooper" } = body;
+// After:
+const { messages, agentId = "cooper", missionId } = body;
+```
 
 **Cooper's Mission Mode system prompt** is injected conditionally in `route.ts`, NOT baked into `getAgentSystemPrompt`. After loading the base system prompt, append when `missionId` is present:
 
@@ -588,7 +594,7 @@ Kid answers → Cooper emits: updateStat({ id: "span", value: 666, objective: "N
 - `src/app/api/chat/route.ts` — Read `missionId` from body, conditionally register tools with `streamText`, append Mission Mode system prompt
 - `src/lib/agents/prompts.ts` — No changes needed (Mission Mode instructions injected in route, not here)
 - `src/app/globals.css` — Add `[data-highlight]` and `[data-solved]` CSS rules
-- `AGENTS.md` — Replace ONLY the `# TOOL DEFINITIONS` block in Cooper's section with `initMission` and `updateStat` schemas from Section 2.4
+- `AGENTS.md` — Replace ONLY the `# TOOL DEFINITIONS (JSON)` block in Cooper's section with `initMission` and `updateStat` schemas from Section 2.4
 
 ---
 
