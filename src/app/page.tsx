@@ -462,10 +462,9 @@ export default function LoginPage() {
       {/* Personalized Greeting */}
       <div className="mb-8 text-center">
         {displayName ? (
-          <div className="flex items-center justify-center gap-1.5">
-            <span style={{ fontSize: 16, fontWeight: 700, color: "#F0E6D3" }}>Welcome back, Agent</span>
-            <span style={{ fontSize: 16, fontWeight: 700, color: "#3B82F6" }}>{displayName}</span>
-          </div>
+          <p className="text-base font-bold text-[#F0E6D3]">
+            Welcome back, Agent {displayName}
+          </p>
         ) : (
           <p className="text-sm font-medium text-[#3B82F6]">{greeting}</p>
         )}
