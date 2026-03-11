@@ -242,3 +242,38 @@ body {
   background-size: 40px 40px;
   animation: holo-grid-scroll 4s linear infinite;
 }
+
+/* ── Digital Scanline Overlay ───────────────────────────────────── */
+@keyframes scanlines-scroll {
+  from { background-position: 0 0; }
+  to { background-position: 0 4px; }
+}
+.scanlines-overlay {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  animation: scanlines-scroll 0.1s linear infinite;
+  pointer-events: none;
+}
+
+/* ── Training Room Station Visuals ────────────────────────────── */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 4px var(--agent-accent)); }
+  50% { opacity: 0.7; filter: drop-shadow(0 0 12px var(--agent-accent)); }
+}
+.station-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes spin-coin {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+.station-spin-coin {
+  animation: spin-coin 3s linear infinite;
+  display: inline-block;
+}
