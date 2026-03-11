@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect, useCallback, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { loginWithPin, sendMagicLink } from "@/lib/actions/auth";
@@ -8,53 +9,25 @@ import { loginWithPin, sendMagicLink } from "@/lib/actions/auth";
 function CooperAvatar() {
   return (
     <div className="relative mb-6 flex items-center justify-center">
-      {/* Outer ring glow */}
-      <div className="absolute h-28 w-28 rounded-full bg-[#3B82F6]/10 animate-pulse" />
-      <div className="absolute h-24 w-24 rounded-full border border-[#3B82F6]/30" />
-      {/* Avatar frame */}
+      {/* Outer pulse ring */}
+      <div className="absolute h-32 w-32 rounded-full bg-blue-500/10 animate-pulse" />
+      <div className="absolute h-28 w-28 rounded-full border border-blue-500/30" />
+      {/* Circular image frame with blue glow */}
       <div
-        className="relative flex h-20 w-20 items-center justify-center rounded-full
-                   border-2 border-[#3B82F6]/60 bg-[#0A1423]
-                   shadow-[0_0_24px_rgba(59,130,246,0.35)]"
+        className="relative h-24 w-24 overflow-hidden rounded-full
+                   border-2 border-blue-500/60
+                   shadow-[0_0_32px_rgba(59,130,246,0.5)]"
       >
-        {/* Holographic Cooper icon — tactical visor silhouette */}
-        <svg
-          viewBox="0 0 48 48"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12"
-        >
-          {/* Head */}
-          <circle cx="24" cy="16" r="9" fill="#1E3A5F" stroke="#3B82F6" strokeWidth="1.5" />
-          {/* Visor */}
-          <rect x="15" y="13" width="18" height="6" rx="3" fill="#3B82F6" opacity="0.85" />
-          {/* Visor glint */}
-          <rect x="17" y="14.5" width="5" height="2" rx="1" fill="white" opacity="0.4" />
-          {/* HUD dots */}
-          <circle cx="17" cy="16" r="1" fill="#60A5FA" />
-          <circle cx="31" cy="16" r="1" fill="#60A5FA" />
-          {/* Shoulders / body */}
-          <path
-            d="M10 40 C10 30 14 27 24 27 C34 27 38 30 38 40"
-            fill="#0F2744"
-            stroke="#3B82F6"
-            strokeWidth="1.5"
-          />
-          {/* Chest emblem */}
-          <polygon points="24,31 27,36 21,36" fill="#3B82F6" opacity="0.8" />
-          {/* Scan line */}
-          <line x1="10" y1="16" x2="15" y2="16" stroke="#3B82F6" strokeWidth="1" opacity="0.6" />
-          <line x1="33" y1="16" x2="38" y2="16" stroke="#3B82F6" strokeWidth="1" opacity="0.6" />
-        </svg>
-        {/* Status dot */}
-        <span className="absolute bottom-1 right-1 h-2.5 w-2.5 rounded-full bg-[#3B82F6] shadow-[0_0_6px_#3B82F6]" />
+        <Image
+          src="/cooper-hologram.png"
+          alt="Cooper"
+          fill
+          className="object-cover"
+          priority
+        />
       </div>
-      {/* Scanline overlay */}
-      <div className="absolute h-20 w-20 rounded-full overflow-hidden opacity-10 pointer-events-none">
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="w-full h-px bg-[#3B82F6]" style={{ marginTop: `${i * 13}px` }} />
-        ))}
-      </div>
+      {/* Status dot */}
+      <span className="absolute bottom-2 right-2 h-3 w-3 rounded-full bg-blue-500 shadow-[0_0_8px_#3B82F6] ring-2 ring-[#050B14]" />
     </div>
   );
 }
