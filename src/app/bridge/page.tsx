@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { AgentPicker } from "@/components/AgentPicker";
 import { HudStatusRail } from "@/components/HudStatusRail";
 import { BridgeSidebar } from "@/components/BridgeSidebar";
 import { DailyClaim } from "@/components/DailyClaim";
@@ -26,14 +27,8 @@ export default async function BridgePage() {
     .single();
 
   if (!profile?.agent_id) {
-    // First-time visitor — AgentPicker will be wired in Plan 02-04
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#050B14]">
-        <div className="text-center">
-          <p className="text-sm text-[#A8977E]">Loading agent selection...</p>
-        </div>
-      </div>
-    );
+    // First-time visitor — full-page RPG agent picker
+    return <AgentPicker />;
   }
 
   // Returning user — BridgeHUD: full game interface
