@@ -42,12 +42,12 @@ Requirements for Phase 2 milestone. Each maps to roadmap phases.
 
 ### UI & Polish
 
-- [ ] **UI-01**: Adventure Navy (#050B14) dark theme with chunky 2px borders and deep shadows throughout
-- [ ] **UI-02**: Agent-specific neon accent glows (Cooper: Blue, Arlo: Orange, Minh: Green, Maya: Violet)
+- [x] **UI-01**: Adventure Navy (#050B14) dark theme with chunky 2px borders and deep shadows throughout
+- [x] **UI-02**: Agent-specific neon accent glows (Cooper: Blue, Arlo: Orange, Minh: Green, Maya: Violet)
 - [ ] **UI-03**: Framer Motion page transitions and component mount animations
 - [ ] **UI-04**: All interactive elements sized for iPad touch targets (min 44x44px)
 - [ ] **UI-05**: Subtle haptic-style visual feedback on tap (scale bounce / glow pulse via Framer Motion)
-- [ ] **UI-06**: `'use client'` directive on every file importing `motion/react` (App Router requirement)
+- [x] **UI-06**: `'use client'` directive on every file importing `motion/react` (App Router requirement)
 
 ## v2 Requirements
 
@@ -111,12 +111,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QUEST-01 | Phase 3 | Pending |
 | QUEST-02 | Phase 3 | Pending |
 | QUEST-03 | Phase 3 | Pending |
-| UI-01 | Phase 2 | Pending |
-| UI-02 | Phase 2 | Pending |
+| UI-01 | Phase 2 | Complete |
+| UI-02 | Phase 2 | Complete |
 | UI-03 | Phase 4 | Pending |
 | UI-04 | Phase 4 | Pending |
 | UI-05 | Phase 4 | Pending |
-| UI-06 | Phase 2 | Pending |
+| UI-06 | Phase 2 | Complete |
 
 **Coverage:**
 - v1 requirements: 27 total
