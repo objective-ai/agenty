@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-05-PLAN.md
-last_updated: "2026-03-11T18:26:36Z"
-last_activity: 2026-03-11 — Completed plan 02-05 (Bridge HUD components + BridgeHUD assembly)
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-03-11T18:31:13.527Z"
+last_activity: 2026-03-11 — Completed plan 02-04 (Agent Picker & Switch Overlay)
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 11
-  completed_plans: 9
-  percent: 82
+  completed_plans: 10
+  percent: 91
 ---
 
 # Project State
@@ -28,16 +28,16 @@ See: .planning/PROJECT.md (updated 2026-03-10)
 Phase: 2 of 4 (Dashboard Shell)
 Plan: 6 of 7 in current phase
 Status: Executing
-Last activity: 2026-03-11 — Completed plan 02-05 (Bridge HUD components + BridgeHUD assembly)
+Last activity: 2026-03-11 — Completed plan 02-04 (Agent Picker & Switch Overlay)
 
-Progress: [████████░░] 82%
+Progress: [█████████░] 91%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
-- Average duration: 2min
-- Total execution time: 18min
+- Total plans completed: 10
+- Average duration: 3min
+- Total execution time: 25min
 
 **By Phase:**
 
@@ -77,6 +77,7 @@ Recent decisions affecting current work:
 - [Phase 02]: AgentSwitchOverlay created as Rule 3 blocking dep placeholder for HudStatusRail
 - [Phase 02]: XP_PER_LEVEL=500 simple linear progression for v1
 - [Phase 02]: useTransition + Server Action pattern for Loot Guard economy mutations
+- [Phase 02]: AgentPicker pre-built as Rule 3 dep in 02-05; 02-04 validates + upgrades AgentSwitchOverlay to full spec
 
 ### Pending Todos
 
@@ -90,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T18:26:36Z
-Stopped at: Completed 02-05-PLAN.md
+Last session: 2026-03-11T18:31:13.524Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
