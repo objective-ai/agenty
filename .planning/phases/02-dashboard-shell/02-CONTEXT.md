@@ -50,6 +50,20 @@ The Bridge dashboard renders with live gold, XP, and energy from Supabase, the c
 - On spend (energy): agent-colored drain effect (uses active agent's accent, NOT red — not alarming for a 9-year-old)
 - Slot machine roll effect explicitly reserved for Phase 3 loot box reveals — do not use here
 
+### Comms Patch — Agent Dialogue Rules
+- **No "Agent Name says:" prefixes** — remove all "Cooper says:" style headers from dialogue
+- **Replace emojis with holographic agent portraits** — wherever an emoji represents an AGENT avatar (not a mechanic icon like ⚡ for energy), use the agent's holographic portrait instead. Each agent gets an `avatar` path in the AGENTS record. Cooper has `/cooper-hologram.png`; others use a `HolographicAvatar` component that renders a styled initial letter inside an agent-colored glowing circle
+- **All system messages are 1st-person tactical** — dialogue from agents is always 1st person ("I'm scanning the grid..." not "Cooper is scanning..."). It should feel like a tactical transmission patching through to the Bridge
+- **Mechanic emojis stay** — ⚡ for energy, 🪙 for gold, ✨ for XP are mechanic icons, not agent avatars. These remain as-is
+- **Nav emojis stay** — 🎯 for Missions, 🎒 for Inventory, 🔬 for Lab represent pages, not agents
+
+### Comms Ripple — Voice Pulse Effect
+- **Visual**: 3–4 vertical bars of varying heights that "dance" next to the agent's holographic portrait during dialogue
+- **Color**: Active agent's theme color (var(--agent-accent))
+- **Trigger**: Animates while text is "typing" out on screen, then settles into a low steady pulse once message is fully displayed
+- **Implementation**: Pure CSS @keyframes — lightweight, no JS audio analysis. Create a `CommsRipple` component with 4 `<span>` bars using staggered animation-delay
+- **Usage**: Placed next to HolographicAvatar wherever an agent is "speaking" (Mission Control briefing, Training Room station content, shell page empty states)
+
 ### Claude's Discretion
 - Exact sidebar icon set and navigation labels
 - Empty shell page layout and empty state message copy
