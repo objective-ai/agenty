@@ -10,7 +10,11 @@ const NAV_ITEMS = [
   { href: "/bridge/lab", label: "THE LAB", emoji: "\u{1F52C}" },
 ] as const;
 
-export function BridgeSidebar() {
+interface BridgeSidebarProps {
+  trainingCertified?: boolean;
+}
+
+export function BridgeSidebar({ trainingCertified = false }: BridgeSidebarProps) {
   const { agent } = useAgent();
   const pathname = usePathname();
 
@@ -37,6 +41,17 @@ export function BridgeSidebar() {
           </Link>
         );
       })}
+
+      {/* Training Certified badge — shown after completing Training Room */}
+      {trainingCertified && (
+        <div
+          className="mt-auto flex w-full items-center justify-center gap-1 rounded-xl border px-2 py-2 text-[10px] font-bold uppercase tracking-wider"
+          style={{ borderColor: "#10B981", color: "#10B981", backgroundColor: "#10B98111" }}
+        >
+          <span>{"\u2713"}</span>
+          <span className="hidden md:inline">CERTIFIED</span>
+        </div>
+      )}
     </aside>
   );
 }

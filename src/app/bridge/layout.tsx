@@ -26,7 +26,7 @@ export default async function BridgeLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("gold, xp, energy, level, agent_id, display_name")
+    .select("gold, xp, energy, level, agent_id, display_name, training_certified")
     .eq("id", user.id)
     .single();
 

@@ -22,7 +22,7 @@ export default async function BridgePage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("agent_id")
+    .select("agent_id, training_certified")
     .eq("id", user.id)
     .single();
 
@@ -39,7 +39,7 @@ export default async function BridgePage() {
 
       {/* Main layout: sidebar + central area */}
       <div className="flex flex-1">
-        <BridgeSidebar />
+        <BridgeSidebar trainingCertified={profile?.training_certified ?? false} />
 
         {/* Central quest area */}
         <main className="flex flex-1 flex-col gap-4 p-6">
