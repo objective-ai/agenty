@@ -1,22 +1,52 @@
-import { vi } from "vitest";
-import {
-  mockSupabaseClient,
-  mockSupabaseAdmin,
-} from "../helpers/supabase-mock";
+import { vi, describe, it, expect, beforeEach } from "vitest";
 
-// Mock supabase server client
-const mockClient = mockSupabaseClient();
+// Use vi.hoisted to create mock variables that are accessible inside vi.mock factories
+const { mockClient, mockAdmin } = vi.hoisted(() => {
+  const fromChainClient = {
+    select: vi.fn().mockReturnThis(),
+    insert: vi.fn().mockReturnThis(),
+    upsert: vi.fn().mockReturnThis(),
+    delete: vi.fn().mockReturnThis(),
+    update: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    single: vi.fn().mockResolvedValue({ data: null, error: null }),
+    maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+  };
+
+  const fromChainAdmin = {
+    select: vi.fn().mockReturnThis(),
+    insert: vi.fn().mockReturnThis(),
+    upsert: vi.fn().mockReturnThis(),
+    delete: vi.fn().mockReturnThis(),
+    update: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    single: vi.fn().mockResolvedValue({ data: null, error: null }),
+    maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+  };
+
+  return {
+    mockClient: {
+      auth: {
+        getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
+      },
+      from: vi.fn(() => fromChainClient),
+      _fromChain: fromChainClient,
+    },
+    mockAdmin: {
+      from: vi.fn(() => fromChainAdmin),
+      _fromChain: fromChainAdmin,
+    },
+  };
+});
+
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn().mockResolvedValue(mockClient),
 }));
 
-// Mock supabase admin client
-const mockAdmin = mockSupabaseAdmin();
 vi.mock("@/lib/supabase/admin", () => ({
   supabaseAdmin: mockAdmin,
 }));
 
-// Import after mocks
 import { saveAgentSelection } from "@/lib/actions/agent";
 
 describe("DASH-06: Agent Persistence", () => {
@@ -25,18 +55,14 @@ describe("DASH-06: Agent Persistence", () => {
   });
 
   it("saveAgentSelection writes agent_id to profiles table via supabaseAdmin", async () => {
-    // Arrange: user is authenticated
     mockClient.auth.getUser.mockResolvedValue({
       data: { user: { id: "user-123" } },
       error: null,
     });
-    // Admin update chain resolves with no error
     mockAdmin._fromChain.eq.mockResolvedValue({ data: null, error: null });
 
-    // Act
     const result = await saveAgentSelection("cooper");
 
-    // Assert
     expect(result).toEqual({ success: true });
     expect(mockAdmin.from).toHaveBeenCalledWith("profiles");
     expect(mockAdmin._fromChain.update).toHaveBeenCalledWith({
@@ -46,23 +72,18 @@ describe("DASH-06: Agent Persistence", () => {
   });
 
   it("saveAgentSelection returns { success: false } when user not authenticated", async () => {
-    // Arrange: no user session
     mockClient.auth.getUser.mockResolvedValue({
       data: { user: null },
       error: null,
     });
 
-    // Act
     const result = await saveAgentSelection("cooper");
 
-    // Assert
     expect(result).toEqual({ success: false, error: "Not authenticated" });
-    // Should not attempt admin write
     expect(mockAdmin.from).not.toHaveBeenCalled();
   });
 
   it("saveAgentSelection returns { success: false } on Supabase write error", async () => {
-    // Arrange: user authenticated but admin write fails
     mockClient.auth.getUser.mockResolvedValue({
       data: { user: { id: "user-123" } },
       error: null,
@@ -72,10 +93,8 @@ describe("DASH-06: Agent Persistence", () => {
       error: { message: "DB write error" },
     });
 
-    // Act
     const result = await saveAgentSelection("arlo");
 
-    // Assert
     expect(result).toEqual({
       success: false,
       error: "Failed to save agent",
