@@ -127,12 +127,18 @@ export async function loginWithPin(
     Date.now() - LOCKOUT_WINDOW_MINUTES * 60 * 1000
   ).toISOString();
 
-  const { data: attempts } = await supabaseAdmin
+  const { data: attempts, error: attemptsError } = await supabaseAdmin
     .from("pin_attempts")
     .select("attempted_at")
     .eq("profile_id", profileId)
     .gte("attempted_at", fifteenMinutesAgo)
     .order("attempted_at", { ascending: false });
+
+  if (attemptsError) {
+    // Table missing or DB error — fail safe: deny login until resolved
+    console.error("pin_attempts query failed:", attemptsError.message);
+    return { error: "service_unavailable" };
+  }
 
   const attemptCount = attempts?.length ?? 0;
 

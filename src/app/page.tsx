@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { loginWithPin, sendMagicLink } from "@/lib/actions/auth";
 
@@ -213,6 +213,7 @@ function MagicLinkForm({ onBack }: { onBack?: () => void }) {
 
 export default function LoginPage() {
   const router = useRouter();
+  const [, startTransition] = useTransition();
 
   // State
   const [pin, setPin] = useState("");
@@ -265,7 +266,7 @@ export default function LoginPage() {
       setIsLoading(false);
 
       if (result.success) {
-        router.push("/bridge");
+        startTransition(() => router.push("/bridge"));
         return;
       }
 
