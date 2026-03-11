@@ -9,12 +9,12 @@ Requirements for Phase 2 milestone. Each maps to roadmap phases.
 
 ### Authentication
 
-- [ ] **AUTH-01**: Parent can set up child account via magic link sent to parent's email
-- [ ] **AUTH-02**: PKCE callback route handler exchanges code for session and sets cookie
-- [ ] **AUTH-03**: Profile row is upserted in `profiles` table on first login (not reliant on DB trigger alone)
-- [ ] **AUTH-04**: Kid can log in daily with a 6-digit PIN (mapped to `signInWithPassword`)
-- [ ] **AUTH-05**: PIN input locks after 5 failed attempts per 15-minute window
-- [ ] **AUTH-06**: Auth middleware protects `/bridge` routes, redirects unauthenticated users to login
+- [x] **AUTH-01**: Parent can set up child account via magic link sent to parent's email
+- [x] **AUTH-02**: PKCE callback route handler exchanges code for session and sets cookie
+- [x] **AUTH-03**: Profile row is upserted in `profiles` table on first login (not reliant on DB trigger alone)
+- [x] **AUTH-04**: Kid can log in daily with a 6-digit PIN (mapped to `signInWithPassword`)
+- [x] **AUTH-05**: PIN input locks after 5 failed attempts per 15-minute window
+- [x] **AUTH-06**: Auth middleware protects `/bridge` routes, redirects unauthenticated users to login
 
 ### The Bridge Dashboard
 
@@ -90,12 +90,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
-| AUTH-05 | Phase 1 | Pending |
-| AUTH-06 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
+| AUTH-04 | Phase 1 | Complete |
+| AUTH-05 | Phase 1 | Complete |
+| AUTH-06 | Phase 1 | Complete |
 | DASH-01 | Phase 2 | Pending |
 | DASH-02 | Phase 2 | Pending |
 | DASH-03 | Phase 2 | Pending |
