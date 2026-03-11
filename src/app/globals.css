@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════
+   AGENTY — Adventure-Game Theme System
+   Deep navy + warm gold + character tints
+   ═══════════════════════════════════════════ */
+
+:root {
+  /* ── Backgrounds ── */
+  --bg-abyss: #030810;
+  --bg-deep: #050B14;
+  --bg-surface: #0A1423;
+  --bg-raised: #0F1D33;
+  --bg-elevated: #142743;
+
+  /* ── Text Hierarchy ── */
+  --ink-primary: #F0E6D3;
+  --ink-secondary: #A8977E;
+  --ink-tertiary: #6B5F4D;
+  --ink-muted: #3D3529;
+
+  /* ── Borders ── */
+  --border-subtle: rgba(168, 151, 126, 0.08);
+  --border-default: rgba(168, 151, 126, 0.15);
+  --border-emphasis: rgba(168, 151, 126, 0.25);
+  --border-strong: rgba(168, 151, 126, 0.40);
+
+  /* ── Accent: Gold Shimmer ── */
+  --gold: #F5C542;
+  --gold-dim: #C9A235;
+  --gold-glow: rgba(245, 197, 66, 0.15);
+  --gold-bright: #FFD966;
+
+  /* ── Accent: Torch Amber ── */
+  --amber: #F59E0B;
+  --amber-dim: #B8760A;
+  --amber-glow: rgba(245, 158, 11, 0.12);
+
+  /* ── Accent: Emerald Success ── */
+  --emerald: #10B981;
+  --emerald-dim: #0A7B56;
+  --emerald-glow: rgba(16, 185, 129, 0.12);
+
+  /* ── Semantic ── */
+  --danger: #EF4444;
+  --danger-glow: rgba(239, 68, 68, 0.12);
+  --warning: #F59E0B;
+  --warning-glow: rgba(245, 158, 11, 0.12);
+
+  /* ── Active Agent Tint (default: gold/neutral) ── */
+  --agent-accent: var(--gold);
+  --agent-accent-dim: var(--gold-dim);
+  --agent-glow: var(--gold-glow);
+  --agent-accent-rgb: 245, 197, 66;
+
+  /* ── Spacing Scale (base: 4px) ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ── Radii ── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  /* ── Shadows ── */
+  --shadow-card: 0 4px 24px -4px rgba(var(--agent-accent-rgb), 0.08),
+                 0 2px 8px -2px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 8px 32px -4px rgba(var(--agent-accent-rgb), 0.15),
+                       0 4px 12px -2px rgba(0, 0, 0, 0.5);
+  --shadow-elevated: 0 12px 40px -8px rgba(var(--agent-accent-rgb), 0.12),
+                     0 8px 16px -4px rgba(0, 0, 0, 0.6);
+}
+
+/* ── Character Tint Overrides ── */
+[data-agent="cooper"] {
+  --agent-accent: #3B82F6;
+  --agent-accent-dim: #2563EB;
+  --agent-glow: rgba(59, 130, 246, 0.12);
+  --agent-accent-rgb: 59, 130, 246;
+}
+
+[data-agent="arlo"] {
+  --agent-accent: #F97316;
+  --agent-accent-dim: #EA580C;
+  --agent-glow: rgba(249, 115, 22, 0.12);
+  --agent-accent-rgb: 249, 115, 22;
+}
+
+[data-agent="minh"] {
+  --agent-accent: #10B981;
+  --agent-accent-dim: #059669;
+  --agent-glow: rgba(16, 185, 129, 0.12);
+  --agent-accent-rgb: 16, 185, 129;
+}
+
+[data-agent="maya"] {
+  --agent-accent: #8B5CF6;
+  --agent-accent-dim: #7C3AED;
+  --agent-glow: rgba(139, 92, 246, 0.12);
+  --agent-accent-rgb: 139, 92, 246;
+}
+
+/* ── Tailwind v4 Theme Inline ── */
+@theme inline {
+  --color-bg-abyss: var(--bg-abyss);
+  --color-bg-deep: var(--bg-deep);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-raised: var(--bg-raised);
+  --color-bg-elevated: var(--bg-elevated);
+
+  --color-ink-primary: var(--ink-primary);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-tertiary: var(--ink-tertiary);
+  --color-ink-muted: var(--ink-muted);
+
+  --color-gold: var(--gold);
+  --color-gold-dim: var(--gold-dim);
+  --color-amber: var(--amber);
+  --color-emerald: var(--emerald);
+  --color-danger: var(--danger);
+
+  --color-agent: var(--agent-accent);
+  --color-agent-dim: var(--agent-accent-dim);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ── Base Reset ── */
+body {
+  background: var(--bg-deep);
+  color: var(--ink-primary);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* ── Loot Card System ── */
+.loot-card {
+  background: var(--bg-surface);
+  border: 2px solid rgba(var(--agent-accent-rgb), 0.2);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.loot-card:hover {
+  border-color: rgba(var(--agent-accent-rgb), 0.4);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-emphasis);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+/* ── PIN Shake Animation ── */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* ── Agent Tint Transition ── */
+* {
+  transition-property: --agent-accent, --agent-accent-dim, --agent-glow, --agent-accent-rgb;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
+}
