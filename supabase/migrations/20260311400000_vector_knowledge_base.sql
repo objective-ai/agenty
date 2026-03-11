@@ -23,7 +23,7 @@ create table public.knowledge_base (
   id          uuid        primary key default gen_random_uuid(),
   content     text        not null,
   metadata    jsonb       not null default '{}',
-  embedding   vector(1536) not null,
+  embedding   extensions.vector(1536) not null,
   profile_id  uuid        not null references public.profiles(id) on delete cascade,
   created_at  timestamptz not null default now()
 );
@@ -38,7 +38,7 @@ comment on table public.knowledge_base is 'RAG knowledge store — PDF chunks wi
 -- m = 16: number of bi-directional links per node (memory vs recall trade-off)
 -- ef_construction = 64: search width during index build (quality vs build time)
 create index knowledge_base_embedding_idx on public.knowledge_base
-  using hnsw (embedding vector_cosine_ops)
+  using hnsw (embedding extensions.vector_cosine_ops)
   with (m = 16, ef_construction = 64);
 
 -- Supplementary index for fast per-profile row lookups
@@ -76,7 +76,7 @@ create policy "Users can view own knowledge"
 -- similarity = 1 − cosine_distance, so 1.0 is a perfect match.
 -- ============================================================
 create or replace function match_knowledge(
-  query_embedding vector(1536),
+  query_embedding extensions.vector(1536),
   match_count     int     default 5,
   p_profile_id    uuid    default auth.uid()
 )
