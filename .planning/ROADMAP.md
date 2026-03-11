@@ -77,7 +77,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Auth Foundation | 0/4 | Planning complete | - |
-| 2. Dashboard Shell | 0/TBD | Not started | - |
+| 1. Auth Foundation | 4/4 | Complete | 2026-03-10 |
+| 2. Dashboard Shell | 7/7 | Complete | 2026-03-11 |
 | 3. Reward Loop | 0/TBD | Not started | - |
 | 4. Animation Polish | 0/TBD | Not started | - |

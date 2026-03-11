@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-04-PLAN.md
-last_updated: "2026-03-11T18:31:13.527Z"
-last_activity: 2026-03-11 — Completed plan 02-04 (Agent Picker & Switch Overlay)
+stopped_at: Completed 02-06-PLAN.md
+last_updated: "2026-03-11T18:37:04Z"
+last_activity: 2026-03-11 — Completed plan 02-06 (Mission Control + Training Room)
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 11
-  completed_plans: 10
-  percent: 91
+  completed_plans: 11
+  percent: 100
 ---
 
 # Project State
@@ -26,25 +26,25 @@ See: .planning/PROJECT.md (updated 2026-03-10)
 ## Current Position
 
 Phase: 2 of 4 (Dashboard Shell)
-Plan: 6 of 7 in current phase
+Plan: 7 of 7 in current phase
 Status: Executing
-Last activity: 2026-03-11 — Completed plan 02-04 (Agent Picker & Switch Overlay)
+Last activity: 2026-03-11 — Completed plan 02-06 (Mission Control + Training Room)
 
-Progress: [█████████░] 91%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
+- Total plans completed: 11
 - Average duration: 3min
-- Total execution time: 25min
+- Total execution time: 31min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-auth-foundation | 3/4 | 7min | 2min |
-| 02-dashboard-shell | 6/7 | 15min | 3min |
+| 02-dashboard-shell | 7/7 | 21min | 3min |
 
 **Recent Trend:**
 - Last 5 plans: --
@@ -78,6 +78,8 @@ Recent decisions affecting current work:
 - [Phase 02]: XP_PER_LEVEL=500 simple linear progression for v1
 - [Phase 02]: useTransition + Server Action pattern for Loot Guard economy mutations
 - [Phase 02]: AgentPicker pre-built as Rule 3 dep in 02-05; 02-04 validates + upgrades AgentSwitchOverlay to full spec
+- [Phase 02]: Training Certified badge persisted via profiles.training_certified DB column (not cookie)
+- [Phase 02]: completeTraining() uses quest_id training_v1 for idempotent loot award via awardLoot()
 
 ### Pending Todos
 
@@ -91,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T18:31:13.524Z
-Stopped at: Completed 02-04-PLAN.md
+Last session: 2026-03-11T18:37:04Z
+Stopped at: Completed 02-06-PLAN.md
 Resume file: None
