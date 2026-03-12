@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { motion } from "motion/react";
 
 type MiniCalculatorProps = {
   accentColor: string;
@@ -86,19 +87,28 @@ export function MiniCalculator({ accentColor, onSend }: MiniCalculatorProps) {
     return { bg: "#1A2640", border: "#ffffff15", color: "#F0E6D3" };
   }
 
+  const tapProps = {
+    whileTap: {
+      scale: 0.92,
+      boxShadow: `0 0 12px rgba(var(--agent-accent-rgb), 0.5)`,
+    },
+    transition: { type: "spring" as const, stiffness: 500, damping: 20 },
+  };
+
   return (
     <div className="relative" ref={panelRef}>
-      {/* Toggle button */}
-      <button
+      {/* Toggle button — 44px touch target */}
+      <motion.button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-[38px] w-[38px] items-center justify-center rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95"
+        className="flex h-[44px] w-[44px] items-center justify-center rounded-xl border-2 hover:scale-105"
         style={{
           borderColor: open ? accentColor : `${accentColor}44`,
           backgroundColor: open ? `${accentColor}33` : `${accentColor}11`,
           boxShadow: open ? `0 0 12px ${accentColor}44` : "none",
         }}
         title="Calculator"
+        {...tapProps}
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="4" y="2" width="16" height="20" rx="2" />
@@ -112,7 +122,7 @@ export function MiniCalculator({ accentColor, onSend }: MiniCalculatorProps) {
           <line x1="8" y1="18" x2="8" y2="18.01" />
           <line x1="12" y1="18" x2="16" y2="18" />
         </svg>
-      </button>
+      </motion.button>
 
       {/* Calculator popover */}
       {open && (
@@ -161,36 +171,38 @@ export function MiniCalculator({ accentColor, onSend }: MiniCalculatorProps) {
                   {row.keys.map((btn) => {
                     const s = btnStyle(btn);
                     return (
-                      <button
+                      <motion.button
                         key={btn}
                         type="button"
                         onClick={() => handleButton(btn)}
-                        className="flex h-10 flex-1 items-center justify-center rounded-lg font-mono text-sm font-bold transition-all duration-100 hover:scale-105 active:scale-95"
+                        className="flex h-11 flex-1 items-center justify-center rounded-lg font-mono text-sm font-bold hover:scale-105"
                         style={{
                           backgroundColor: s.bg,
                           border: `1px solid ${s.border}`,
                           color: s.color,
                         }}
+                        {...tapProps}
                       >
                         {btn}
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </div>
                 {/* Right operator column — fixed width */}
                 {row.op ? (
-                  <button
+                  <motion.button
                     type="button"
                     onClick={() => handleButton(row.op!)}
-                    className="flex h-10 w-12 items-center justify-center rounded-lg font-mono text-base font-bold transition-all duration-100 hover:scale-105 active:scale-95"
+                    className="flex h-11 w-12 items-center justify-center rounded-lg font-mono text-base font-bold hover:scale-105"
                     style={{
                       backgroundColor: `${accentColor}22`,
                       border: `1px solid ${accentColor}44`,
                       color: accentColor,
                     }}
+                    {...tapProps}
                   >
                     {row.op}
-                  </button>
+                  </motion.button>
                 ) : (
                   <div className="w-12" />
                 )}
@@ -199,20 +211,21 @@ export function MiniCalculator({ accentColor, onSend }: MiniCalculatorProps) {
           </div>
 
           {/* Send answer */}
-          <button
+          <motion.button
             type="button"
             onClick={handleSend}
             disabled={result === null}
-            className="mt-2.5 w-full rounded-lg py-2.5 font-mono text-xs font-black uppercase tracking-widest transition-all duration-200 hover:scale-[1.02] active:scale-95 disabled:cursor-not-allowed disabled:opacity-30"
+            className="mt-2.5 w-full rounded-lg py-2.5 font-mono text-xs font-black uppercase tracking-widest hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-30"
             style={{
               backgroundColor: `${accentColor}22`,
               border: `2px solid ${accentColor}`,
               color: accentColor,
               boxShadow: result !== null ? `0 0 12px ${accentColor}33` : "none",
             }}
+            {...tapProps}
           >
             SEND ANSWER
-          </button>
+          </motion.button>
         </div>
       )}
     </div>
