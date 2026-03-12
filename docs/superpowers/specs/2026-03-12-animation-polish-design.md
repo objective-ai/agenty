@@ -16,9 +16,13 @@
 
 ## Workstream 1: Page Transitions (UI-03)
 
+### Enter-only transitions (App Router constraint)
+
+**Important:** In Next.js 15 App Router, `AnimatePresence` exit animations do not work for route changes. The React Server Components runtime unmounts the old page before Framer Motion can capture it for an exit animation. Therefore, all transitions are **enter-only** — the new page animates in, the old page disappears instantly.
+
 ### New Component: `src/components/PageTransition.tsx`
 
-A `'use client'` wrapper that uses `AnimatePresence` and `usePathname()` to animate route changes under `/bridge`.
+A `'use client'` wrapper that applies an enter animation to `{children}` based on the current route. Uses `usePathname()` and `useRef` (to track previous path) to determine which enter variant to apply.
 
 **Transition logic:**
 
@@ -30,10 +34,10 @@ Route depth map:
   /bridge/command-deck → depth 1
   /bridge/inventory → depth 1
 
-Transition rules:
-  same depth     → crossfade (200ms, opacity 0→1)
-  deeper         → slide-left (300ms, x: 100→0, opacity 0→1)
-  shallower      → slide-right (300ms, x: -100→0, opacity 0→1)
+Enter transition rules (based on navigation direction):
+  same depth     → crossfade in (200ms, opacity 0→1)
+  deeper         → slide-in from right (300ms, x: 60→0, opacity 0→1)
+  shallower      → slide-in from left (300ms, x: -60→0, opacity 0→1)
   login→bridge   → portal warp (500ms, scale: 0.8→1, opacity 0→1, filter: blur(8px)→blur(0))
 ```
 
@@ -50,9 +54,9 @@ Transition rules:
 </AgentProvider>
 ```
 
-**Key constraint:** `AnimatePresence` needs a `key` prop on the child to detect route changes. Use `usePathname()` as the key. The exiting page must have `position: absolute` during exit to avoid layout shift.
+**Implementation approach:** On each pathname change, `PageTransition` compares the new depth to the previous depth (stored in `useRef`) and applies the corresponding enter variant to a `motion.div` wrapper. The `key` prop is set to `pathname` so Framer Motion re-mounts the wrapper, triggering the `initial → animate` sequence.
 
-**Login → Bridge portal:** This transition lives in `src/app/page.tsx` (or `src/app/auth/page.tsx`), not in the bridge layout. After successful auth redirect, the bridge page mounts with a one-time portal entrance animation (checked via `sessionStorage` flag to avoid replaying on refresh).
+**Login → Bridge portal:** This transition lives in `src/app/bridge/page.tsx`. On first mount after auth redirect, the bridge page plays a one-time portal entrance animation (checked via `sessionStorage` flag `portalPlayed` to avoid replaying on refresh).
 
 ### Framer Motion variants
 
@@ -60,19 +64,16 @@ Transition rules:
 const crossfade = {
   initial: { opacity: 0 },
   animate: { opacity: 1, transition: { duration: 0.2 } },
-  exit: { opacity: 0, transition: { duration: 0.15 } },
 };
 
-const slideLeft = {
-  initial: { opacity: 0, x: 100 },
+const slideFromRight = {
+  initial: { opacity: 0, x: 60 },
   animate: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } },
-  exit: { opacity: 0, x: -100, transition: { duration: 0.2 } },
 };
 
-const slideRight = {
-  initial: { opacity: 0, x: -100 },
+const slideFromLeft = {
+  initial: { opacity: 0, x: -60 },
   animate: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } },
-  exit: { opacity: 0, x: 100, transition: { duration: 0.2 } },
 };
 
 const portalWarp = {
@@ -83,6 +84,8 @@ const portalWarp = {
   },
 };
 ```
+
+**Note:** The `portalWarp` ease `[0.34, 1.56, 0.64, 1]` intentionally overshoots (scale goes past 1.0 briefly) for a bounce effect appropriate to a kids' game portal entrance.
 
 ## Workstream 2: Tap Feedback (UI-05)
 
@@ -111,12 +114,12 @@ Every interactive element gets Framer Motion `whileTap` and optionally `whileHov
 | AgentSwitchOverlay buttons | `src/components/AgentSwitchOverlay.tsx` | Modal cards, no tap feedback | Add `whileTap` to agent selection buttons |
 | MissionCompleteOverlay buttons | `src/components/MissionCompleteOverlay.tsx` | CTA buttons, no tap | Add `whileTap` to "Collect Rewards" and "Return to Base" |
 | Training station buttons | `src/app/bridge/missions/training/page.tsx` | Has `whileTap={{ scale: 0.97 }}` | Add boxShadow glow, adjust scale to 0.95 |
-| Mission board cards | `src/app/bridge/missions/page.tsx` | CSS `hover:translate-y` only | Convert to `motion.div` with `whileHover` + `whileTap` |
-| BlueprintDiagram zones | `src/components/BlueprintDiagram.tsx` | SVG click zones, CSS transitions | Add `whileTap` scale pulse on zone click |
-| IntelDrawer toggle | `src/components/IntelDrawer.tsx` | Toggle button, no tap feedback | Add `whileTap` scale+glow |
+| Mission board cards | `src/app/bridge/missions/page.tsx` | CSS `hover:translate-y` only | Extract to `MissionBoardGrid` client component, add `whileHover` + `whileTap` (see WS-4 note) |
+| BlueprintDiagram zones | `src/components/BlueprintDiagram.tsx` | SVG via `dangerouslySetInnerHTML`, CSS transitions | Use CSS `active:scale-[0.97]` on zones (cannot use Framer `whileTap` on injected HTML) |
+| IntelDrawer close button | `src/components/IntelDrawer.tsx` | Close button (`h-8 w-8`), no tap feedback | Add `whileTap` scale+glow. Also audit parent component for open trigger button. |
 | CommsPanel send button | `src/components/CommsPanel.tsx` | Send button, no tap feedback | Add `whileTap` scale+glow |
 | MiniCalculator buttons | `src/components/MiniCalculator.tsx` | Calculator key grid, no tap | Add `whileTap` scale+glow to each key |
-| PIN input keys | `src/app/auth/page.tsx` | Number pad buttons, CSS `active:scale-95` | Convert to `motion.button` with `whileTap` |
+| PIN input keys | `src/app/auth/page.tsx` | Number pad buttons, CSS `active:scale-95` | Convert to `motion.button` with `whileTap`. **Note:** Auth page is outside `AgentProvider` — use `:root` default gold color (`245, 197, 66`) for glow. Do not import `useAgent()` here. |
 
 **Total: 12 components, ~3-5 lines changed per component.**
 
@@ -176,12 +179,35 @@ Add staggered `initial`/`animate` to page-level content containers. Uses Framer 
 
 **Components to add mount animations:**
 
-| Component/Page | File | Animation |
-|----------------|------|-----------|
-| Bridge dashboard sections | `src/app/bridge/page.tsx` | Stagger fade-up for HUD, DailyClaim, StartQuest |
-| Mission board cards | `src/app/bridge/missions/page.tsx` | Stagger fade-up for each mission card |
-| Training stations | `src/app/bridge/missions/training/page.tsx` | Stagger reveal for 3 stations |
-| StartQuestButton | `src/components/StartQuestButton.tsx` | Fade-in + scale entrance |
+| Component/Page | File | Animation | Notes |
+|----------------|------|-----------|-------|
+| Bridge dashboard sections | `src/app/bridge/page.tsx` | Stagger fade-up for HUD, DailyClaim, StartQuest | **Server Component** — extract a `<DashboardStagger>` client wrapper that receives children as props |
+| Mission board cards | `src/app/bridge/missions/page.tsx` | Stagger fade-up for each mission card | **Server Component** — extract a `<MissionBoardGrid>` client component that receives `missions` array as props |
+| Training stations | `src/app/bridge/missions/training/page.tsx` | Stagger reveal for 3 stations | Already a client component (`'use client'`) — can add directly |
+| StartQuestButton | `src/components/StartQuestButton.tsx` | Fade-in + scale entrance | Already a client component |
+
+### Server Component extraction pattern
+
+`bridge/page.tsx` and `bridge/missions/page.tsx` are Server Components (async, fetch data). They cannot use `motion.div`. Extract thin client wrapper components that receive data as props:
+
+```tsx
+// bridge/page.tsx (Server Component, stays as-is):
+export default async function BridgePage() {
+  // ... server data fetching ...
+  return <DashboardStagger trainingCertified={...}>{/* children */}</DashboardStagger>;
+}
+
+// components/DashboardStagger.tsx ('use client'):
+export function DashboardStagger({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
+      {children}
+    </motion.div>
+  );
+}
+```
+
+Same pattern for `MissionBoardGrid` — Server Component passes mission data down, client component wraps in stagger + adds hover/tap.
 
 ### Hover upgrades
 
@@ -189,7 +215,7 @@ Convert CSS-only hover effects to Framer Motion for consistency with tap feedbac
 
 | Component | Current | Upgrade to |
 |-----------|---------|------------|
-| Mission board cards | CSS `hover:-translate-y-1` + `hover:shadow` | `whileHover={{ y: -4, boxShadow }}` matching AgentPicker pattern |
+| Mission board cards | CSS `hover:-translate-y-1` + `hover:shadow` | `whileHover={{ y: -4, boxShadow }}` matching AgentPicker pattern (inside `MissionBoardGrid` client component) |
 
 ## Workstream 5: prefers-reduced-motion
 
@@ -217,8 +243,10 @@ For `PageTransition` (single component), embed the check directly. For per-compo
 
 ## Files Changed Summary
 
-### New files (1)
-- `src/components/PageTransition.tsx` — AnimatePresence route transition wrapper
+### New files (3)
+- `src/components/PageTransition.tsx` — Enter-only route transition wrapper (motion.div + usePathname)
+- `src/components/DashboardStagger.tsx` — Client wrapper for staggered dashboard section mount
+- `src/components/MissionBoardGrid.tsx` — Client wrapper for mission cards with stagger + hover + tap
 
 ### Modified files (~15)
 - `src/app/bridge/layout.tsx` — Wrap children in `<PageTransition>`
@@ -231,11 +259,12 @@ For `PageTransition` (single component), embed the check directly. For per-compo
 - `src/components/HudStatusRail.tsx` — Add whileTap to avatar + touch target fix
 - `src/components/AgentSwitchOverlay.tsx` — Add whileTap to agent cards
 - `src/components/MissionCompleteOverlay.tsx` — Add whileTap to CTA buttons
-- `src/components/BlueprintDiagram.tsx` — Add whileTap to zones + touch target check
-- `src/components/IntelDrawer.tsx` — Add whileTap to toggle + touch target fix
+- `src/components/BlueprintDiagram.tsx` — Add CSS `active:scale-[0.97]` to zones + touch target check (no Framer — SVG via dangerouslySetInnerHTML)
+- `src/components/IntelDrawer.tsx` — Add whileTap to close button + touch target fix (h-8 w-8 → min 44px)
 - `src/components/CommsPanel.tsx` — Add whileTap to send button + touch target fix
 - `src/components/MiniCalculator.tsx` — Add whileTap to keys + touch target check
-- `src/app/globals.css` — (Optional) Add `--agent-tap-glow` shorthand variable
+- `src/app/bridge/page.tsx` — Wrap dashboard sections in `<DashboardStagger>`
+- `src/app/bridge/missions/page.tsx` — Extract card grid to `<MissionBoardGrid>`, pass mission data as props
 
 ## Testing Strategy
 
