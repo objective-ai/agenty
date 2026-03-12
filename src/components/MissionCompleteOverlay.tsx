@@ -262,7 +262,7 @@ export function MissionCompleteOverlay({
           <motion.button
             onClick={handleCollect}
             disabled={isPending}
-            className="w-full rounded-xl border-2 py-3 font-mono text-sm font-black uppercase tracking-widest transition-all duration-200 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
+            className="w-full rounded-xl border-2 py-3 font-mono text-sm font-black uppercase tracking-widest disabled:opacity-50"
             style={{
               borderColor: "#10B981",
               backgroundColor: "#10B98122",
@@ -271,7 +271,15 @@ export function MissionCompleteOverlay({
             }}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.5, type: "spring", stiffness: 400, damping: 17 }}
+            whileTap={{
+              scale: 0.95,
+              boxShadow: `0 0 20px rgba(var(--agent-accent-rgb), 0.6)`,
+            }}
+            whileHover={{
+              scale: 1.02,
+              boxShadow: `0 0 12px rgba(var(--agent-accent-rgb), 0.3)`,
+            }}
           >
             {isPending ? "COLLECTING..." : "COLLECT REWARDS"}
           </motion.button>
@@ -280,7 +288,7 @@ export function MissionCompleteOverlay({
         {rewardsCollected && (
           <motion.button
             onClick={() => router.push("/bridge")}
-            className="w-full rounded-xl border-2 py-3 font-mono text-sm font-black uppercase tracking-widest transition-all duration-200 hover:scale-[1.02] active:scale-95"
+            className="w-full rounded-xl border-2 py-3 font-mono text-sm font-black uppercase tracking-widest"
             style={{
               borderColor: "#3B82F6",
               backgroundColor: "#3B82F622",
@@ -289,6 +297,15 @@ export function MissionCompleteOverlay({
             }}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            whileTap={{
+              scale: 0.95,
+              boxShadow: `0 0 20px rgba(var(--agent-accent-rgb), 0.6)`,
+            }}
+            whileHover={{
+              scale: 1.02,
+              boxShadow: `0 0 12px rgba(var(--agent-accent-rgb), 0.3)`,
+            }}
           >
             RETURN TO BASE
           </motion.button>
