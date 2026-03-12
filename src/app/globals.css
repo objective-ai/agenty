@@ -304,3 +304,13 @@ body {
   stroke-opacity: 0.85 !important;
   transition: filter 0.3s, stroke-opacity 0.3s;
 }
+
+/* ── Blueprint zone tap feedback (CSS-only, SVG via dangerouslySetInnerHTML) ── */
+.blueprint-zone {
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+.blueprint-zone:active {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
