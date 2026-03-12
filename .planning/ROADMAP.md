@@ -15,7 +15,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Auth Foundation** - Parent magic-link setup + kid PIN login with brute-force protection and session middleware
 - [x] **Phase 2: Dashboard Shell** - The Bridge renders with real Supabase data, agent theming active, and AnimatedNumber primitive ready
 - [x] **Phase 2.5: Intelligence Core** (INSERTED) - Claude AI chat, vector embeddings, PDF upload + RAG, Mission Mode with briefing board
-- [ ] **Phase 3: Expanded Reward Loop** - Wire live data (kill mocks), rank titles, shields/damaged mode, Command Deck upgrades (4 new inputs), AI mission banners via Gemini
+- [x] **Phase 2.6: Command Deck — Mission Factory** (INSERTED) - Parent-facing mission generation with AI, template system, validation, CRUD, and 3 new missions
+- [x] **Phase 2.7: Economy & Live Dashboard** (INSERTED) - Economy server actions (Loot Guard), dashboard components, mission completion overlay, calculator widget, CommsPanel v2
+- [x] **Phase 3: Expanded Reward Loop** - Wire dashboard to live Supabase data, rank titles, shields/damaged mode, 4 new Command Deck inputs, AI mission banners via Gemini
 - [ ] **Phase 4: Animation Polish** - Page transitions, iPad touch targets, and haptic-style tap feedback across every interactive element
 
 ## Phase Details
@@ -49,26 +51,54 @@ Plans:
   5. All motion-importing components carry `'use client'` and cause zero hydration warnings in `next build`
 **Plans**: TBD
 
-### Phase 3: Expanded Reward Loop
-**Goal**: Wire all dashboard components to live Supabase data (kill mocks), add rank titles, implement shields/damaged mode during missions, expand Command Deck with 4 new generation inputs, and generate AI mission banners via Gemini Nano Banana 2.
+### Phase 2.6: Command Deck — Mission Factory (INSERTED)
+**Goal**: Parents can generate AI-powered missions from templates, preview/validate them, and save to Supabase for kids to play.
 **Depends on**: Phase 2.5
+**Requirements**: Mission generation, template system, mission CRUD, parent dashboard
+**Success Criteria** (what must be TRUE):
+  1. `/bridge/command-deck` renders mission list from Supabase + form for new missions
+  2. Submitting the form calls Claude Sonnet 4, validates output with 11-rule deterministic validator, retries once on failure
+  3. Parent can preview generated mission (blueprint, stats, rewards) and approve or regenerate
+  4. Approved missions save to `missions` table with RLS (parent owns, kid reads active)
+  5. Mission list supports archive/reactivate/delete with ownership enforcement
+  6. 4 SVG templates (bridge, rover, pyramid, solar) with zone manifests guide generation
+  7. 3 hardcoded missions (Mars Rover, Pyramid Architect, Solar ISS) registered alongside Dragon Bridge
+**Plans**: Executed manually (not via GSD phases)
+
+### Phase 2.7: Economy & Live Dashboard (INSERTED)
+**Goal**: Economy server actions enforce Loot Guard pattern, dashboard components are built (but with placeholder data), mission completion awards rewards, and CommsPanel upgraded to AI SDK v6 with grounded prompts.
+**Depends on**: Phase 2.6
+**Requirements**: Economy actions, dashboard components, mission completion flow, chat upgrades
+**Success Criteria** (what must be TRUE):
+  1. `awardLoot()` and `spendEnergy()` are isolated server actions; client cannot supply amounts
+  2. DailyClaim calls `awardLoot(25, "daily_bonus")` with idempotent server-side check
+  3. MissionCompleteOverlay collects rewards via `awardLoot()` and navigates to `/bridge`
+  4. MiniCalculator floating widget available during missions for computation
+  5. CommsPanel uses AI SDK v6 transport with tool call deduplication on `toolCallId`
+  6. Chat route injects mission context (title, description, stat goals) + Math-First Rule into system prompt
+  7. IntelDrawer supports file listing, upload progress, and deletion
+  8. Bridge missions page loads combined static + DB missions via `getAllActiveMissions()`
+**Plans**: Executed manually (not via GSD phases)
+
+### Phase 3: Expanded Reward Loop
+**Goal**: Wire dashboard components to live Supabase data (kill hardcoded values), add rank titles, implement shields/damaged mode during missions, expand Command Deck with 4 new generation inputs, and generate AI mission banners via Gemini Nano Banana 2.
+**Depends on**: Phase 2.7
 **Requirements**: ECON-01, ECON-02, ECON-03, ECON-04, ECON-05, ECON-06, QUEST-01, QUEST-02, QUEST-03
 **Success Criteria** (what must be TRUE):
   1. XPProgress, DailyStreak, StatsBar, and RecentLoot display live data from Supabase — zero hardcoded values
-  2. Daily claim is idempotent (quest_id = "daily_claim_YYYY-MM-DD"), double-tap produces only one ledger entry
-  3. Rank titles (Technical Scout → Field Engineer → Tactical Architect → Agenty Commander) display based on level
-  4. Wrong answers during missions drain shields (-10%); at 0% "Damaged Mode" activates with visual effects and 50% reward penalty
-  5. Command Deck collects problem count (3/5/10), difficulty (Easy/Medium/Hard), narrative theme (Space/Nature/History/Fantasy), and time estimate (Short/Medium/Long)
-  6. Mission generation produces the correct number of stats matching problemCount and adjusts difficulty accordingly
-  7. Each generated mission includes an AI-generated banner image (Gemini); missing API key degrades gracefully (no banner, no error)
+  2. Rank titles (Technical Scout → Field Engineer → Tactical Architect → Agenty Commander) display based on level
+  3. Wrong answers during missions drain shields (-10%); at 0% "Damaged Mode" activates with visual effects and 50% reward penalty
+  4. Command Deck adds 4 new inputs: problem count (3/5/10), difficulty (Easy/Medium/Hard), narrative theme (Space/Nature/History/Fantasy), time estimate (Short/Medium/Long)
+  5. Mission generation produces the correct number of stats matching problemCount and adjusts difficulty accordingly
+  6. Each generated mission includes an AI-generated banner image (Gemini); missing API key degrades gracefully (no banner, no error)
 **Plans**: 5 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Server Actions (claimDaily, getProfile, getRecentLoot), EconomyContext expansion, rank titles
-- [ ] 03-02-PLAN.md — Wire dashboard components to live data (XPProgress, DailyStreak, StatsBar, RecentLoot, DailyClaim)
-- [ ] 03-03-PLAN.md — Shields mechanic (missionReducer, reportWrongAnswer tool, Damaged Mode visuals)
-- [ ] 03-04-PLAN.md — Command Deck upgrades (4 new inputs, DB migration, validator relaxation)
-- [ ] 03-05-PLAN.md — AI mission banners (Gemini integration, Supabase Storage, banner display)
+- [x] 03-01-PLAN.md — Server Actions (getProfile, getRecentLoot), EconomyContext expansion, rank titles
+- [x] 03-02-PLAN.md — Wire dashboard components to live data (XPProgress, DailyStreak, StatsBar, RecentLoot)
+- [x] 03-03-PLAN.md — Shields mechanic (missionReducer, reportWrongAnswer tool, Damaged Mode visuals)
+- [x] 03-04-PLAN.md — Command Deck upgrades (4 new inputs, validator relaxation)
+- [x] 03-05-PLAN.md — AI mission banners (Gemini integration, Supabase Storage, banner display)
 
 ### Phase 2.5: Intelligence Core (INSERTED)
 **Goal**: Claude AI streaming chat works with agent personas, PDFs can be uploaded and queried via RAG, and Mission Mode provides a structured learning flow with real-time stat tracking.
@@ -96,12 +126,14 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 → 2 → 2.5 → 2.6 → 2.7 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Auth Foundation | 4/4 | Complete | 2026-03-10 |
 | 2. Dashboard Shell | 7/7 | Complete | 2026-03-11 |
 | 2.5. Intelligence Core | manual | Complete | 2026-03-12 |
-| 3. Reward Loop | 0/5 | Not started | - |
+| 2.6. Command Deck | manual | Complete | 2026-03-12 |
+| 2.7. Economy & Dashboard | manual | Complete | 2026-03-12 |
+| 3. Reward Loop | 5/5 | Complete | 2026-03-12 |
 | 4. Animation Polish | 0/TBD | Not started | - |

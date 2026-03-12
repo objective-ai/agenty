@@ -27,8 +27,8 @@ Requirements for Phase 2 milestone. Each maps to roadmap phases.
 
 ### Economy & Reward Loop
 
-- [ ] **ECON-01**: Completing the demo quest triggers `awardLoot()` granting 50 Gold (server-authoritative amount)
-- [ ] **ECON-02**: Starting the demo quest triggers `spendEnergy()` to deduct energy
+- [x] **ECON-01**: Completing the demo quest triggers `awardLoot()` granting 50 Gold (server-authoritative amount)
+- [x] **ECON-02**: Starting the demo quest triggers `spendEnergy()` to deduct energy
 - [ ] **ECON-03**: Reward claims are idempotent — no double-claiming on the same quest completion
 - [ ] **ECON-04**: Gold balance animates with a slot-machine style count-up (~800ms) after award
 - [ ] **ECON-05**: Quest completion triggers a Framer Motion celebration screen (particle burst / confetti)
@@ -102,8 +102,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DASH-04 | Phase 2 | Complete |
 | DASH-05 | Phase 2 | Complete |
 | DASH-06 | Phase 2 | Complete |
-| ECON-01 | Phase 3 | Pending |
-| ECON-02 | Phase 3 | Pending |
+| ECON-01 | Phase 3 | Complete |
+| ECON-02 | Phase 3 | Complete |
 | ECON-03 | Phase 3 | Pending |
 | ECON-04 | Phase 3 | Pending |
 | ECON-05 | Phase 3 | Pending |
