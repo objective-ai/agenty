@@ -137,5 +137,5 @@ Phases execute in numeric order: 1 → 2 → 2.5 → 2.6 → 2.7 → 3 → 4
 | 2.5. Intelligence Core | manual | Complete | 2026-03-12 |
 | 2.6. Command Deck | manual | Complete | 2026-03-12 |
 | 2.7. Economy & Dashboard | manual | Complete | 2026-03-12 |
-| 3. Reward Loop | 5/7 | Gap closure | 2026-03-12 |
+| 3. Reward Loop | 6/7 | In Progress|  |
 | 4. Animation Polish | 0/TBD | Not started | - |
