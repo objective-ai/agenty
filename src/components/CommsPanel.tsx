@@ -15,6 +15,8 @@ import type { UIMessage } from "ai";
 import type { Dispatch } from "react";
 import type { MissionConfig } from "@/lib/missions/registry";
 import type { MissionAction } from "@/lib/missions/missionReducer";
+import { MiniCalculator } from "@/components/MiniCalculator";
+import { spendEnergy } from "@/lib/actions/economy";
 
 function getTextContent(message: UIMessage): string {
   return message.parts
@@ -26,9 +28,11 @@ function getTextContent(message: UIMessage): string {
 type CommsPanelProps = {
   missionConfig?: MissionConfig;
   dispatchMission?: Dispatch<MissionAction>;
+  isDamaged?: boolean;
+  shields?: number;
 };
 
-export function CommsPanel({ missionConfig, dispatchMission }: CommsPanelProps = {}) {
+export function CommsPanel({ missionConfig, dispatchMission, isDamaged, shields }: CommsPanelProps = {}) {
   const { agent, activeAgent } = useAgent();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [inputValue, setInputValue] = useState("");
@@ -47,6 +51,14 @@ export function CommsPanel({ missionConfig, dispatchMission }: CommsPanelProps =
 
   const isLoading = status === "streaming" || status === "submitted";
 
+  // Auto-trigger mission briefing on mount when in mission mode
+  const missionTriggered = useRef(false);
+  useEffect(() => {
+    if (!missionConfig || missionTriggered.current) return;
+    missionTriggered.current = true;
+    sendMessage({ text: "begin" });
+  }, [missionConfig, sendMessage]);
+
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     if (scrollRef.current) {
@@ -54,36 +66,54 @@ export function CommsPanel({ missionConfig, dispatchMission }: CommsPanelProps =
     }
   }, [messages]);
 
-  // Track processed message IDs to prevent duplicate dispatches when messages array
-  // appends new entries (user text after tool call) and re-triggers the effect
-  const processedMsgIds = useRef<Set<string>>(new Set());
+  // Track dispatched tool call IDs to prevent duplicate dispatches on re-renders
+  const dispatchedToolCallIds = useRef<Set<string>>(new Set());
 
-  // Intercept Cooper's tool calls from AI SDK v6 message parts
+  // Intercept Cooper's updateStat tool calls from AI SDK v6 message parts
   useEffect(() => {
     if (!dispatchMission) return;
     const lastMsg = messages[messages.length - 1];
     if (!lastMsg || lastMsg.role !== "assistant") return;
-    // Skip if we've already processed this message
-    if (processedMsgIds.current.has(lastMsg.id)) return;
-    processedMsgIds.current.add(lastMsg.id);
 
     for (const part of lastMsg.parts) {
-      // AI SDK v6: server-only tools surface as DynamicToolUIPart with type "dynamic-tool"
-      if (part.type === "dynamic-tool") {
-        const toolPart = part as unknown as { type: "dynamic-tool"; toolName: string; input: unknown; state: string };
-        if (toolPart.state !== "input-available" && toolPart.state !== "output-available") continue;
-        if (toolPart.toolName === "initMission") {
-          dispatchMission({
-            type: "MISSION_INIT",
-            payload: toolPart.input as { objective: string },
-          });
-        } else if (toolPart.toolName === "updateStat") {
-          dispatchMission({
-            type: "STAT_UPDATE",
-            payload: toolPart.input as { id: string; value: number; objective?: string },
-          });
-        }
-      }
+      if (part.type !== "tool-updateStat") continue;
+
+      // Static tool (has execute) — dispatch on output-available
+      const p = part as unknown as { toolCallId: string; input: unknown; state: string };
+      if (p.state !== "output-available") continue;
+
+      const dedupKey = p.toolCallId || `updateStat-${JSON.stringify(p.input)}`;
+      if (dispatchedToolCallIds.current.has(dedupKey)) continue;
+      dispatchedToolCallIds.current.add(dedupKey);
+
+      dispatchMission({
+        type: "STAT_UPDATE",
+        payload: p.input as { id: string; value: number; objective?: string },
+      });
+    }
+  }, [messages, dispatchMission]);
+
+  // Intercept reportWrongAnswer tool calls — drain shields + spend energy
+  useEffect(() => {
+    if (!dispatchMission) return;
+    const lastMsg = messages[messages.length - 1];
+    if (!lastMsg || lastMsg.role !== "assistant") return;
+
+    for (const part of lastMsg.parts) {
+      if (part.type !== "tool-reportWrongAnswer") continue;
+
+      const p = part as unknown as { toolCallId: string; input: unknown; state: string };
+      if (p.state !== "output-available") continue;
+
+      const dedupKey = p.toolCallId || `reportWrongAnswer-${JSON.stringify(p.input)}`;
+      if (dispatchedToolCallIds.current.has(dedupKey)) continue;
+      dispatchedToolCallIds.current.add(dedupKey);
+
+      dispatchMission({ type: "SHIELD_HIT" });
+      // Fire-and-forget: spend energy for shield damage (Loot Guard: server validates)
+      spendEnergy(10, "shield_damage").catch(() => {
+        // Energy spend failure is non-blocking — shields still drain visually
+      });
     }
   }, [messages, dispatchMission]);
 
@@ -151,6 +181,8 @@ export function CommsPanel({ missionConfig, dispatchMission }: CommsPanelProps =
           const isAgent = message.role === "assistant";
           const text = getTextContent(message);
           if (!text && !isAgent) return null;
+          // Hide the auto-trigger "begin" message from mission mode
+          if (!isAgent && text === "begin" && missionConfig) return null;
 
           return (
             <div
@@ -191,12 +223,17 @@ export function CommsPanel({ missionConfig, dispatchMission }: CommsPanelProps =
                 {isAgent && (
                   <p
                     className="mb-1 font-mono text-[10px] font-bold uppercase tracking-widest"
-                    style={{ color: agent.color }}
+                    style={{ color: isDamaged ? "#EF4444" : agent.color }}
                   >
-                    {agent.name}
+                    {isDamaged ? "[SIGNAL DEGRADED] " : ""}{agent.name}
                   </p>
                 )}
-                <p className="whitespace-pre-wrap">{text}</p>
+                <p
+                  className="whitespace-pre-wrap"
+                  style={isAgent && isDamaged ? { fontStyle: "italic" } : undefined}
+                >
+                  {text}
+                </p>
               </div>
             </div>
           );
@@ -254,6 +291,15 @@ export function CommsPanel({ missionConfig, dispatchMission }: CommsPanelProps =
               e.currentTarget.style.boxShadow = "none";
             }}
           />
+          {missionConfig && (
+            <MiniCalculator
+              accentColor={agent.color}
+              onSend={(text) => {
+                if (isLoading) return;
+                sendMessage({ role: "user", parts: [{ type: "text", text }] });
+              }}
+            />
+          )}
           <button
             type="submit"
             disabled={isLoading || !inputValue.trim()}

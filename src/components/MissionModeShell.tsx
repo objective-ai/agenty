@@ -1,13 +1,14 @@
 // src/components/MissionModeShell.tsx
 "use client";
 
-import { useReducer, useEffect, useState } from "react";
+import { useReducer } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import type { MissionConfig } from "@/lib/missions/registry";
 import { missionReducer, initialState } from "@/lib/missions/missionReducer";
 import { MissionBriefingBoard } from "./MissionBriefingBoard";
 import { CommsPanel } from "./CommsPanel";
 import { IntelDrawer } from "./IntelDrawer";
+import { MissionCompleteOverlay } from "./MissionCompleteOverlay";
 
 type MissionModeShellProps = {
   config: MissionConfig;
@@ -15,20 +16,6 @@ type MissionModeShellProps = {
 
 export function MissionModeShell({ config }: MissionModeShellProps) {
   const [state, dispatch] = useReducer(missionReducer, initialState(config));
-  const [signalLost, setSignalLost] = useState(false);
-
-  // Show SIGNAL LOST if Cooper never calls initMission within 15s
-  useEffect(() => {
-    const t = setTimeout(() => {
-      if (state.status === "ghost") setSignalLost(true);
-    }, 15_000);
-    return () => clearTimeout(t);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Clear signalLost once mission becomes active
-  useEffect(() => {
-    if (state.status !== "ghost") setSignalLost(false);
-  }, [state.status]);
 
   const intelButtonDisabled =
     (config.isCritical ?? false) && state.status === "active";
@@ -82,13 +69,16 @@ export function MissionModeShell({ config }: MissionModeShellProps) {
             config={config}
             state={state}
             dispatch={dispatch}
-            signalLost={signalLost}
+            shields={state.shields}
+            isDamaged={state.isDamaged}
           />
         </div>
         <div className="min-h-0 flex-1 overflow-hidden">
           <CommsPanel
             missionConfig={config}
             dispatchMission={dispatch}
+            isDamaged={state.isDamaged}
+            shields={state.shields}
           />
         </div>
       </div>
@@ -109,6 +99,19 @@ export function MissionModeShell({ config }: MissionModeShellProps) {
           <IntelDrawer
             key="drawer"
             onClose={() => dispatch({ type: "CLOSE_INTEL_DRAWER" })}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Mission Complete Overlay */}
+      <AnimatePresence>
+        {state.status === "complete" && (
+          <MissionCompleteOverlay
+            key="complete"
+            config={config}
+            rewardsCollected={state.rewardsCollected}
+            dispatch={dispatch}
+            isDamaged={state.isDamaged}
           />
         )}
       </AnimatePresence>
