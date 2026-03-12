@@ -70,16 +70,21 @@ export function AgentSwitchOverlay({ isOpen, onClose }: AgentSwitchOverlayProps)
 
             <div className="flex flex-col gap-2">
               {(Object.values(AGENTS) as typeof AGENTS[AgentId][]).map((agent) => (
-                <button
+                <motion.button
                   key={agent.id}
                   onClick={() => handleSwitch(agent.id)}
                   disabled={isPending}
                   className="flex items-center gap-3 rounded-xl border-2 p-3 text-left
-                             transition-all duration-200 disabled:opacity-50"
+                             disabled:opacity-50"
                   style={{
                     borderColor: agent.id === activeAgent ? agent.color : "rgba(255,255,255,0.1)",
                     backgroundColor: agent.id === activeAgent ? `${agent.color}11` : "transparent",
                   }}
+                  whileTap={{
+                    scale: 0.95,
+                    boxShadow: `0 0 20px rgba(var(--agent-accent-rgb), 0.6)`,
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   {/* Agent Holographic Portrait (Comms Patch) with dissolve animation */}
                   <motion.div
@@ -104,7 +109,7 @@ export function AgentSwitchOverlay({ isOpen, onClose }: AgentSwitchOverlayProps)
                     {/* Per-agent quest stats — placeholder for Phase 2; real data wired in Phase 3 */}
                     <p className="mt-0.5 text-[10px] text-[#A8977E]/60">0 quests completed</p>
                   </div>
-                </button>
+                </motion.button>
               ))}
             </div>
 
