@@ -73,13 +73,18 @@ export function IntelDrawer({ onClose }: IntelDrawerProps) {
             Upload classified documents
           </p>
         </div>
-        <button
+        <motion.button
           onClick={onClose}
-          className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 font-mono text-sm text-[#A8977E] transition-colors hover:border-[#3B82F6] hover:text-[#3B82F6]"
+          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg border border-white/10 font-mono text-sm text-[#A8977E] hover:border-[#3B82F6] hover:text-[#3B82F6]"
           aria-label="Close Intel Vault"
+          whileTap={{
+            scale: 0.95,
+            boxShadow: `0 0 20px rgba(var(--agent-accent-rgb), 0.6)`,
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
           ×
-        </button>
+        </motion.button>
       </div>
 
       {/* Scrollable content */}
