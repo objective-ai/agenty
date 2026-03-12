@@ -13,14 +13,16 @@ type MissionBriefingBoardProps = {
   config: MissionConfig;
   state: MissionState;
   dispatch: Dispatch<MissionAction>;
-  signalLost: boolean;
+  shields?: number;
+  isDamaged?: boolean;
 };
 
 export function MissionBriefingBoard({
   config,
   state,
   dispatch,
-  signalLost,
+  shields = 100,
+  isDamaged = false,
 }: MissionBriefingBoardProps) {
   const isGhost = state.status === "ghost";
   const isComplete = state.status === "complete";
@@ -51,6 +53,53 @@ export function MissionBriefingBoard({
         MISSION BRIEFING BOARD
       </div>
 
+      {/* Shield bar */}
+      {!isGhost && (
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[2px]">
+            <span style={{ color: shields > 30 ? "#3B82F6" : "#EF4444" }}>
+              SHIELDS
+            </span>
+            <span style={{ color: shields > 30 ? "#3B82F699" : "#EF444499" }}>
+              {shields}%
+            </span>
+          </div>
+          <div
+            className="h-2 w-full overflow-hidden rounded-full"
+            style={{ background: "#0A1423", border: "1px solid #1F2937" }}
+          >
+            <div
+              className={isDamaged ? "shield-flicker" : ""}
+              style={{
+                width: `${shields}%`,
+                height: "100%",
+                borderRadius: "9999px",
+                background:
+                  shields > 30
+                    ? "linear-gradient(90deg, #3B82F6, #1D4ED8)"
+                    : "#EF4444",
+                transition: "width 0.4s ease, background 0.4s ease",
+              }}
+            />
+          </div>
+          <style>{`
+            @keyframes shield-flicker {
+              0%, 100% { filter: hue-rotate(0deg) brightness(1); }
+              50% { filter: hue-rotate(-30deg) brightness(0.85); }
+            }
+            .shield-flicker {
+              animation: shield-flicker 0.8s ease-in-out infinite;
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .shield-flicker {
+                animation: none;
+                filter: hue-rotate(-15deg) brightness(0.9);
+              }
+            }
+          `}</style>
+        </div>
+      )}
+
       {/* Blueprint area — ghost vs active */}
       <AnimatePresence mode="wait">
         {isGhost ? (
@@ -70,7 +119,7 @@ export function MissionBriefingBoard({
               className="font-mono text-[10px] uppercase tracking-[2px]"
               style={{ color: "#3B82F633" }}
             >
-              {signalLost ? "SIGNAL LOST — retrying…" : "TACTICAL SCAN"}
+              TACTICAL SCAN
             </p>
             <p
               className="font-mono text-[10px] animate-ghost-pulse"
@@ -87,6 +136,7 @@ export function MissionBriefingBoard({
             transition={{ duration: 0.6, times: [0, 0.3, 0.6, 1] }}
           >
             <BlueprintDiagram
+              blueprintAsset={config.blueprintAsset}
               highlightId={state.activeHighlight}
               solvedIds={solvedIds}
               dispatchMission={dispatch}
