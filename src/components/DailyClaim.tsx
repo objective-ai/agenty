@@ -60,14 +60,22 @@ export function DailyClaim() {
             onClick={handleClaim}
             disabled={isPending}
             className="w-full rounded-2xl border-2 font-black uppercase tracking-wider
-                       text-[#050B14] transition-all duration-200 disabled:opacity-60"
+                       text-[#050B14] disabled:opacity-60"
             style={{
               minHeight: 64,
               backgroundColor: agent.color,
               borderColor: agent.color,
               boxShadow: `0 0 20px ${agent.color}66`,
             }}
-            whileTap={{ scale: 0.97 }}
+            whileTap={{
+              scale: 0.95,
+              boxShadow: `0 0 20px rgba(var(--agent-accent-rgb), 0.6)`,
+            }}
+            whileHover={{
+              scale: 1.02,
+              boxShadow: `0 0 12px rgba(var(--agent-accent-rgb), 0.3)`,
+            }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             {isPending ? "CLAIMING..." : "CLAIM DAILY REWARD \u00B7 +25 GOLD"}
           </motion.button>
