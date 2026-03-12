@@ -7,6 +7,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { useRef, useEffect, useState, useMemo } from "react";
+import { motion } from "motion/react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useAgent } from "@/contexts/AgentContext";
@@ -300,19 +301,24 @@ export function CommsPanel({ missionConfig, dispatchMission, isDamaged, shields 
               }}
             />
           )}
-          <button
+          <motion.button
             type="submit"
             disabled={isLoading || !inputValue.trim()}
-            className="rounded-xl border-2 px-4 py-2 font-mono text-xs font-black uppercase tracking-widest transition-all duration-200 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-[44px] rounded-xl border-2 px-4 py-2 font-mono text-xs font-black uppercase tracking-widest hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
             style={{
               borderColor: agent.color,
               backgroundColor: `${agent.color}22`,
               color: agent.color,
               boxShadow: `0 0 12px ${agent.color}33`,
             }}
+            whileTap={{
+              scale: 0.95,
+              boxShadow: `0 0 20px rgba(var(--agent-accent-rgb), 0.6)`,
+            }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             SEND
-          </button>
+          </motion.button>
         </div>
       </form>
     </div>
