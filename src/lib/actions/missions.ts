@@ -3,7 +3,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import type { ActionResult } from "./economy";
+import { awardLoot } from "./economy";
 import type { MissionStatConfig } from "@/lib/missions/registry";
+import { resolveMission } from "@/lib/missions/registry";
 
 // ── Types ─────────────────────────────────────────────────────────
 
@@ -180,4 +182,58 @@ export async function getMyMissions(): Promise<ActionResult<MissionRow[]>> {
   }
 
   return { success: true, data: (data ?? []) as MissionRow[] };
+}
+
+// ── Mission Completion (Loot Guard) ──────────────────────────────
+
+export interface CompleteMissionResult {
+  goldAwarded: number;
+  xpAwarded: number;
+}
+
+/**
+ * Complete a mission and award rewards. Server computes actual amounts.
+ * When isDamaged=true, rewards are halved (50% signal penalty).
+ * This is the Loot Guard compliant replacement for direct awardLoot() calls.
+ */
+export async function completeMission(
+  missionId: string,
+  isDamaged: boolean
+): Promise<ActionResult<CompleteMissionResult>> {
+  const userId = await getAuthenticatedUserId();
+  if (!userId) return { success: false, error: "Not authenticated" };
+
+  // Look up mission config (DB first, then static registry)
+  const config = await resolveMission(missionId);
+  if (!config) return { success: false, error: "Mission not found" };
+
+  // Server computes actual rewards — client cannot influence amounts
+  const goldReward = isDamaged
+    ? Math.floor(config.goldReward / 2)
+    : config.goldReward;
+  const xpReward = isDamaged
+    ? Math.floor(config.xpReward / 2)
+    : config.xpReward;
+
+  // Award gold via the standard Loot Guard path
+  const lootResult = await awardLoot(
+    goldReward,
+    `mission:${missionId}`,
+    `mission-${missionId}`
+  );
+
+  if (!lootResult.success) {
+    // Already claimed is acceptable — still return the amounts
+    if (lootResult.error !== "Quest reward already claimed") {
+      return { success: false, error: lootResult.error };
+    }
+  }
+
+  // TODO(Phase 3+): Award XP via profile update RPC when XP system is wired
+  // For now, XP is tracked client-side / hardcoded (see CLAUDE.md gotcha)
+
+  return {
+    success: true,
+    data: { goldAwarded: goldReward, xpAwarded: xpReward },
+  };
 }

@@ -16,6 +16,9 @@ export type MissionState = {
   currentObjective: string;
   stats: Record<string, StatEntry>;
   activeHighlight: string | null;
+  rewardsCollected: boolean;
+  shields: number;
+  isDamaged: boolean;
 };
 
 export type MissionAction =
@@ -23,14 +26,20 @@ export type MissionAction =
   | { type: "STAT_UPDATE"; payload: { id: string; value: number; objective?: string } }
   | { type: "HIGHLIGHT_CLEAR" }
   | { type: "OPEN_INTEL_DRAWER" }
-  | { type: "CLOSE_INTEL_DRAWER" };
+  | { type: "CLOSE_INTEL_DRAWER" }
+  | { type: "COLLECT_REWARDS" }
+  | { type: "SHIELD_HIT" }
+  | { type: "SET_SHIELDS"; payload: { shields: number } };
 
 export function initialState(config: MissionConfig): MissionState {
   return {
-    status: "ghost",
+    status: "active",
     isDrawerOpen: false,
-    currentObjective: "",
+    currentObjective: config.defaultObjective,
     activeHighlight: null,
+    rewardsCollected: false,
+    shields: 100,
+    isDamaged: false,
     stats: Object.fromEntries(
       config.stats.map((s) => [
         s.id,
@@ -81,6 +90,21 @@ export function missionReducer(
 
     case "CLOSE_INTEL_DRAWER":
       return { ...state, isDrawerOpen: false };
+
+    case "COLLECT_REWARDS":
+      return { ...state, rewardsCollected: true };
+
+    case "SHIELD_HIT": {
+      const newShields = Math.max(0, state.shields - 10);
+      return { ...state, shields: newShields, isDamaged: newShields === 0 };
+    }
+
+    case "SET_SHIELDS":
+      return {
+        ...state,
+        shields: action.payload.shields,
+        isDamaged: action.payload.shields === 0,
+      };
 
     default:
       return state;
