@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { AgentProvider } from "@/contexts/AgentContext";
 import { EconomyProvider } from "@/contexts/EconomyContext";
 import type { AgentId } from "@/contexts/AgentContext";
@@ -16,9 +16,7 @@ export default async function BridgeLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser(supabase);
 
   if (!user) {
     return redirect("/");
@@ -26,7 +24,7 @@ export default async function BridgeLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("gold, xp, energy, level, agent_id, display_name, training_certified")
+    .select("gold, xp, energy, level, streak_days, agent_id, display_name, training_certified")
     .eq("id", user.id)
     .single();
 
@@ -37,6 +35,7 @@ export default async function BridgeLayout({
         initialXp={profile?.xp ?? 0}
         initialEnergy={profile?.energy ?? 100}
         initialLevel={profile?.level ?? 1}
+        initialStreakDays={profile?.streak_days ?? 0}
       >
         {children}
       </EconomyProvider>

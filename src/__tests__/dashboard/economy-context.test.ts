@@ -1,4 +1,15 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+// Mock supabase admin (transitively imported by EconomyContext -> getProfile -> supabaseAdmin)
+vi.mock("@/lib/supabase/admin", () => ({
+  supabaseAdmin: {},
+}));
+
+vi.mock("@/lib/supabase/server", () => ({
+  createClient: vi.fn(),
+  getAuthUser: vi.fn(),
+  DEV_USER_ID: "dev-user-123",
+}));
 
 describe("DASH-03: EconomyContext", () => {
   it("initializes gold from initialGold prop without client fetch", async () => {
