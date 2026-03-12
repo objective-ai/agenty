@@ -37,7 +37,7 @@ key-decisions:
 patterns-established:
   - "Economy consumer pattern: useEconomy() hook provides all dashboard data points"
 
-requirements-completed: [ECON-01, ECON-04, ECON-05]
+requirements-completed: [ECON-04, QUEST-01, QUEST-02]
 
 duration: 4min
 completed: 2026-03-12
@@ -93,6 +93,9 @@ None.
 ## Next Phase Readiness
 - All dashboard components now show live data from Supabase
 - No hardcoded values remain in dashboard components
+
+## Correction Note (2026-03-12)
+Note: ECON-05 (confetti/particle burst) was originally claimed in this plan's `requirements-completed` but was not implemented here. Confetti was addressed in gap closure Plan 03-06 (ConfettiBurst defined inside MissionCompleteOverlay). Additionally, ECON-01 was removed from this plan's claim (it belongs to Plan 03-03 which implements completeMission()). QUEST-01 and QUEST-02 have been added as this plan's DailyClaim component — the "CLAIM DAILY REWARD" single-click button — is what satisfies the daily check-in requirements. The `requirements-completed` frontmatter has been corrected to `[ECON-04, QUEST-01, QUEST-02]`.
 
 ---
 *Phase: 03-expanded-reward-loop*
