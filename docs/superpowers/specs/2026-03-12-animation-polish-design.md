@@ -56,7 +56,7 @@ Enter transition rules (based on navigation direction):
 
 **Implementation approach:** On each pathname change, `PageTransition` compares the new depth to the previous depth (stored in `useRef`) and applies the corresponding enter variant to a `motion.div` wrapper. The `key` prop is set to `pathname` so Framer Motion re-mounts the wrapper, triggering the `initial → animate` sequence.
 
-**Login → Bridge portal:** This transition lives in `src/app/bridge/page.tsx`. On first mount after auth redirect, the bridge page plays a one-time portal entrance animation (checked via `sessionStorage` flag `portalPlayed` to avoid replaying on refresh).
+**Login → Bridge portal:** The portal warp animation lives inside the `DashboardStagger` client component (not in the Server Component `bridge/page.tsx`). On first mount after auth redirect, it checks `sessionStorage` for a `portalPlayed` flag — if absent, plays the portal warp entrance and sets the flag. On subsequent visits/refreshes, it plays the standard crossfade instead.
 
 ### Framer Motion variants
 
@@ -119,7 +119,7 @@ Every interactive element gets Framer Motion `whileTap` and optionally `whileHov
 | IntelDrawer close button | `src/components/IntelDrawer.tsx` | Close button (`h-8 w-8`), no tap feedback | Add `whileTap` scale+glow. Also audit parent component for open trigger button. |
 | CommsPanel send button | `src/components/CommsPanel.tsx` | Send button, no tap feedback | Add `whileTap` scale+glow |
 | MiniCalculator buttons | `src/components/MiniCalculator.tsx` | Calculator key grid, no tap | Add `whileTap` scale+glow to each key |
-| PIN input keys | `src/app/auth/page.tsx` | Number pad buttons, CSS `active:scale-95` | Convert to `motion.button` with `whileTap`. **Note:** Auth page is outside `AgentProvider` — use `:root` default gold color (`245, 197, 66`) for glow. Do not import `useAgent()` here. |
+| PIN input keys | `src/app/page.tsx` | Number pad buttons, CSS `active:scale-95` (min-h-[64px]) | Convert to `motion.button` with `whileTap`. **Note:** Login page is outside `AgentProvider` — use `:root` default gold color (`245, 197, 66`) for glow. Do not import `useAgent()` here. PIN keys are already 64px (compliant with UI-04). |
 
 **Total: 12 components, ~3-5 lines changed per component.**
 
@@ -145,7 +145,7 @@ All interactive elements must have a minimum tap area of 44×44px (Apple HIG / W
 | HUD avatar button | `HudStatusRail.tsx` | ~36px circle | Increase to 44px, add padding |
 | CommsPanel send button | `CommsPanel.tsx` | ~32px icon button | Add `min-w-[44px] min-h-[44px]` with padding |
 | IntelDrawer toggle | `IntelDrawer.tsx` | ~32px icon button | Add `min-w-[44px] min-h-[44px]` |
-| PIN number keys | `auth/page.tsx` | Variable | Ensure each key is ≥44×44px |
+| PIN number keys | `page.tsx` (root) | 64×64px (compliant) | Already ≥44×44px — no fix needed, just verify |
 | MiniCalculator keys | `MiniCalculator.tsx` | Variable | Ensure each key is ≥44×44px |
 | BlueprintDiagram zones | `BlueprintDiagram.tsx` | SVG-dependent | Verify zone click areas ≥44px; if not, add invisible hit area expansion |
 
@@ -207,7 +207,7 @@ export function DashboardStagger({ children }: { children: React.ReactNode }) {
 }
 ```
 
-Same pattern for `MissionBoardGrid` — Server Component passes mission data down, client component wraps in stagger + adds hover/tap.
+`MissionBoardGrid` is **data-driven**, not children-based: it receives the `missions` array as a prop and renders the card grid internally (with `Link` from `next/link`, `whileHover`, `whileTap`, and stagger). The Server Component page passes the fetched missions array down.
 
 ### Hover upgrades
 
@@ -248,12 +248,12 @@ For `PageTransition` (single component), embed the check directly. For per-compo
 - `src/components/DashboardStagger.tsx` — Client wrapper for staggered dashboard section mount
 - `src/components/MissionBoardGrid.tsx` — Client wrapper for mission cards with stagger + hover + tap
 
-### Modified files (~15)
+### Modified files (14)
 - `src/app/bridge/layout.tsx` — Wrap children in `<PageTransition>`
-- `src/app/bridge/page.tsx` — Add stagger mount animation to dashboard sections
-- `src/app/bridge/missions/page.tsx` — Mount animation + hover upgrade for mission cards
-- `src/app/bridge/missions/training/page.tsx` — Mount animation + tap glow upgrade
-- `src/app/auth/page.tsx` — Convert PIN keys to motion.button + touch target check
+- `src/app/bridge/page.tsx` — Wrap dashboard sections in `<DashboardStagger>` for stagger mount animation
+- `src/app/bridge/missions/page.tsx` — Extract card grid to `<MissionBoardGrid>` client component, pass mission data as props
+- `src/app/bridge/missions/training/page.tsx` — Add stagger mount animation + tap glow upgrade
+- `src/app/page.tsx` — Convert PIN keys from CSS `active:scale-95` to `motion.button` with `whileTap`
 - `src/components/DailyClaim.tsx` — Add glow to existing whileTap
 - `src/components/StartQuestButton.tsx` — Add whileTap + whileHover + mount animation
 - `src/components/HudStatusRail.tsx` — Add whileTap to avatar + touch target fix
@@ -263,8 +263,6 @@ For `PageTransition` (single component), embed the check directly. For per-compo
 - `src/components/IntelDrawer.tsx` — Add whileTap to close button + touch target fix (h-8 w-8 → min 44px)
 - `src/components/CommsPanel.tsx` — Add whileTap to send button + touch target fix
 - `src/components/MiniCalculator.tsx` — Add whileTap to keys + touch target check
-- `src/app/bridge/page.tsx` — Wrap dashboard sections in `<DashboardStagger>`
-- `src/app/bridge/missions/page.tsx` — Extract card grid to `<MissionBoardGrid>`, pass mission data as props
 
 ## Testing Strategy
 
