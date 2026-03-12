@@ -1,7 +1,7 @@
 // src/components/MissionCompleteOverlay.tsx
 "use client";
 
-import { useEffect, useState, useTransition, type Dispatch } from "react";
+import { useEffect, useState, useTransition, useMemo, type Dispatch } from "react";
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import type { MissionConfig } from "@/lib/missions/registry";
@@ -14,6 +14,82 @@ type MissionCompleteOverlayProps = {
   dispatch: Dispatch<MissionAction>;
   isDamaged?: boolean;
 };
+
+const CONFETTI_COLORS = ["#10B981", "#3B82F6", "#F59E0B", "#8B5CF6"];
+const PARTICLE_COUNT = 36;
+
+type ConfettiParticle = {
+  id: number;
+  x: number;
+  y: number;
+  rotation: number;
+  color: string;
+  width: number;
+  height: number;
+  duration: number;
+  delay: number;
+};
+
+function generateParticles(): ConfettiParticle[] {
+  return Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
+    id: i,
+    x: (Math.random() - 0.5) * 400,   // -200 to +200
+    y: -100 - Math.random() * 300,     // -100 to -400 (upward burst)
+    rotation: Math.random() * 720,
+    color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+    width: 6 + Math.random() * 4,      // 6-10px
+    height: 4 + Math.random() * 4,     // 4-8px
+    duration: 1.5 + Math.random() * 1, // 1.5-2.5s
+    delay: Math.random() * 0.3,        // 0-0.3s stagger
+  }));
+}
+
+function ConfettiBurst() {
+  const prefersReducedMotion = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }, []);
+
+  const particles = useMemo(() => generateParticles(), []);
+
+  if (prefersReducedMotion) return null;
+
+  return (
+    <div
+      className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
+      aria-hidden="true"
+    >
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          style={{
+            position: "absolute",
+            width: p.width,
+            height: p.height,
+            backgroundColor: p.color,
+            borderRadius: 2,
+            top: "30%",
+            left: "50%",
+            marginLeft: -p.width / 2,
+            marginTop: -p.height / 2,
+          }}
+          initial={{ x: 0, y: 0, opacity: 1, rotate: 0 }}
+          animate={{
+            x: p.x,
+            y: p.y,
+            opacity: 0,
+            rotate: p.rotation,
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            ease: [0.2, 0.8, 0.4, 1],
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export function MissionCompleteOverlay({
   config,
@@ -59,6 +135,9 @@ export function MissionCompleteOverlay({
     >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-[#050B14]/90 backdrop-blur-sm" />
+
+      {/* Confetti burst — behind card (no z-index, card is z-10) */}
+      <ConfettiBurst />
 
       {/* Card */}
       <motion.div
