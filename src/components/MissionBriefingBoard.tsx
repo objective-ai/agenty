@@ -15,6 +15,7 @@ type MissionBriefingBoardProps = {
   dispatch: Dispatch<MissionAction>;
   shields?: number;
   isDamaged?: boolean;
+  bannerUrl?: string | null;
 };
 
 export function MissionBriefingBoard({
@@ -23,6 +24,7 @@ export function MissionBriefingBoard({
   dispatch,
   shields = 100,
   isDamaged = false,
+  bannerUrl,
 }: MissionBriefingBoardProps) {
   const isGhost = state.status === "ghost";
   const isComplete = state.status === "complete";
@@ -52,6 +54,17 @@ export function MissionBriefingBoard({
       >
         MISSION BRIEFING BOARD
       </div>
+
+      {/* Banner image (from Gemini generation) */}
+      {bannerUrl && !isGhost && (
+        <div className="overflow-hidden rounded-xl border border-[#3B82F633]">
+          <img
+            src={bannerUrl}
+            alt="Mission banner"
+            className="aspect-video w-full object-cover"
+          />
+        </div>
+      )}
 
       {/* Shield bar */}
       {!isGhost && (
