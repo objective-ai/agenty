@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { AgentProvider } from "@/contexts/AgentContext";
 import { EconomyProvider } from "@/contexts/EconomyContext";
+import { PageTransition } from "@/components/PageTransition";
 import type { AgentId } from "@/contexts/AgentContext";
 
 // ═══════════════════════════════════════════════════════════════════
@@ -37,7 +38,9 @@ export default async function BridgeLayout({
         initialLevel={profile?.level ?? 1}
         initialStreakDays={profile?.streak_days ?? 0}
       >
-        {children}
+        <PageTransition>
+          {children}
+        </PageTransition>
       </EconomyProvider>
     </AgentProvider>
   );
