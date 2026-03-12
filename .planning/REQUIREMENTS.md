@@ -48,9 +48,9 @@ Requirements for Phase 2 milestone. Each maps to roadmap phases.
 
 - [x] **UI-01**: Adventure Navy (#050B14) dark theme with chunky 2px borders and deep shadows throughout
 - [x] **UI-02**: Agent-specific neon accent glows (Cooper: Blue, Arlo: Orange, Minh: Green, Maya: Violet)
-- [ ] **UI-03**: Framer Motion page transitions and component mount animations
-- [ ] **UI-04**: All interactive elements sized for iPad touch targets (min 44x44px)
-- [ ] **UI-05**: Subtle haptic-style visual feedback on tap (scale bounce / glow pulse via Framer Motion)
+- [x] **UI-03**: Framer Motion page transitions and component mount animations
+- [x] **UI-04**: All interactive elements sized for iPad touch targets (min 44x44px)
+- [x] **UI-05**: Subtle haptic-style visual feedback on tap (scale bounce / glow pulse via Framer Motion)
 - [x] **UI-06**: `'use client'` directive on every file importing `motion/react` (App Router requirement)
 
 ## v2 Requirements
@@ -117,9 +117,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QUEST-03 | Phase 3 | Complete |
 | UI-01 | Phase 2 | Complete |
 | UI-02 | Phase 2 | Complete |
-| UI-03 | Phase 4 | Pending |
-| UI-04 | Phase 4 | Pending |
-| UI-05 | Phase 4 | Pending |
+| UI-03 | Phase 4 | Complete |
+| UI-04 | Phase 4 | Complete |
+| UI-05 | Phase 4 | Complete |
 | UI-06 | Phase 2 | Complete |
 
 **Coverage:**
@@ -129,4 +129,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-10*
-*Last updated: 2026-03-12 after Phase 3 gap closure — ECON-03/04/06, QUEST-01/02/03 marked complete based on VERIFICATION.md results*
+*Last updated: 2026-03-12 after Phase 4 Animation Polish — UI-03, UI-04, UI-05 marked complete. All v1 requirements satisfied.*

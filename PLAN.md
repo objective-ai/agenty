@@ -93,4 +93,35 @@ All three sub-phases implemented:
 - [x] **Phase 2.5c** — Intel upload via IntelDrawer, PDF parsing + chunking, OpenAI embeddings, RAG retrieval in chat.
 - [x] **Phase 2.5d (Mission Mode)** — `/bridge/lab` with Holographic Briefing Board, `MissionRegistry`, `missionReducer`, `updateStat` tool, BlueprintDiagram SVG. Board activates client-side on mount (no AI dependency).
 
-**Next Up:** Phase 3 — Reward Loop
+**Next Up:** ~~Phase 3 — Reward Loop~~ → COMPLETE (2026-03-12)
+
+---
+
+## Phase 4: Animation Polish — COMPLETE (2026-03-12)
+
+**Goal:** Every interactive element feels like a game control — Framer Motion page transitions, 44px touch targets, spring tap feedback throughout.
+
+### Chunk 1: Foundation — New Components + Layout Integration
+- [x] **Task 1** — `PageTransition` enter-only route transition component (crossfade/slide-right/slide-left by depth)
+- [x] **Task 2** — `DashboardStagger` with portal warp (first login) + stagger mount
+- [x] **Task 3** — `MissionBoardGrid` client component with stagger + hover lift + tap feedback
+- [x] **Task 4** — Integrate `PageTransition` into `bridge/layout.tsx` + `DashboardStagger` into `bridge/page.tsx`
+
+### Chunk 2: Tap Feedback + Touch Targets (Per-Component)
+- [x] **Task 5** — DailyClaim: whileTap/whileHover spring glow
+- [x] **Task 6** — StartQuestButton: entrance animation + tap feedback
+- [x] **Task 7** — HudStatusRail: 44px avatar button + tap glow
+- [x] **Task 8** — AgentSwitchOverlay: all agent cards → motion.button + tap glow
+- [x] **Task 9** — MissionCompleteOverlay: remove CSS active/hover, add Framer whileTap/whileHover
+- [x] **Task 10** — Training page: stagger station mount + station header motion.button + CTA upgrade
+- [x] **Task 11** — IntelDrawer: close button → 44px motion.button + tap glow
+- [x] **Task 12** — CommsPanel: motion import + SEND → motion.button + 44px
+- [x] **Task 13** — MiniCalculator: motion import + all keys → motion.button + h-11 + 44px toggle
+- [x] **Task 14** — BlueprintDiagram: globals.css `.blueprint-zone:active` CSS tap feedback
+- [x] **Task 15** — PIN pad KeyButton: → motion.button with Cooper-blue tap glow
+
+### Chunk 3: Verification + Docs
+- [x] **Task 16** — Build: `npx next build` green. E2E: all pre-existing tests pass.
+- [x] **Task 17** — Docs: REQUIREMENTS.md (UI-03/04/05 ✓), ROADMAP.md (Phase 4 ✓), STATE.md (100%), PLAN.md updated.
+
+**v1.0 milestone achieved. All 27 v1 requirements satisfied.**
