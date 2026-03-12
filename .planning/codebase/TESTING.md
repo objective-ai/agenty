@@ -1,27 +1,28 @@
 # Testing Patterns
 
-**Analysis Date:** 2026-03-10
+**Analysis Date:** 2026-03-10 (updated 2026-03-12)
 
 ## Test Framework
 
-**Runner:** Not configured
-- No Jest, Vitest, or other test runner detected in package.json
-- No test configuration files found (jest.config.*, vitest.config.*)
+**Unit Test Runner:** Vitest (configured)
+- Config: `vitest.config.ts` (Node environment, globals enabled)
+- Run: `npm test` or `npx vitest`
 
-**Assertion Library:** None detected
+**E2E Runner:** Playwright
+- Test file: `tests/e2e/bridge-lab.spec.py`
+- Run: `npm run test:e2e` (requires `npm run dev` running, `NEXT_PUBLIC_DEV_SKIP_AUTH=true`)
+- Setup: `playwright install chromium` (one-time)
 
-**Testing Status:** No automated test suite currently in place
+**Assertion Library:** Vitest built-in (`expect`, `describe`, `it`)
 
-**Run Commands:** Not available
-- Testing infrastructure needs to be set up
-- Recommended: Vitest for Next.js + TypeScript projects (faster, ESM-first)
-- Alternative: Jest with Next.js preset
+**Testing Status:** Basic infrastructure in place. Unit test stubs exist; E2E covers Mission Mode flow.
 
 ## Test File Organization
 
-**Current Status:** No test files exist in codebase
-- No `*.test.ts`, `*.test.tsx`, `*.spec.ts`, `*.spec.tsx` files found in `src/`
-- Codebase is untested
+**Current Status:** Test stubs and E2E tests exist
+- Unit test stubs: `src/__tests__/auth/` (callback, magic-link, middleware, pin-login, rate-limit, setup)
+- Unit test stubs: `src/__tests__/dashboard/` (agent-context)
+- E2E: `tests/e2e/bridge-lab.spec.py`
 
 **Recommended Pattern (not yet implemented):**
 - Location: Co-located with source
@@ -243,12 +244,10 @@ open coverage/index.html
 - Approach: Render multiple components together, test user flows
 
 **E2E Tests:**
-- Framework: Not configured
-- Recommended: Playwright or Cypress for future implementation
-- Examples to test:
-  - User clicks agent selector and sees UI update
-  - User accepts a quest and progress bar appears
-  - Agent tint changes globally when selection changes
+- Framework: Playwright (configured)
+- Test file: `tests/e2e/bridge-lab.spec.py`
+- Covers: Mission Mode page load, board activation, Cooper response, stat updates
+- Manual testing: Use `playwright-cli` for interactive browser automation (login as Brando via PIN 123456)
 
 ## Common Patterns
 
@@ -369,4 +368,4 @@ export default defineConfig({
 
 ---
 
-*Testing analysis: 2026-03-10*
+*Testing analysis: 2026-03-10 (updated 2026-03-12 — Vitest + Playwright now configured)*

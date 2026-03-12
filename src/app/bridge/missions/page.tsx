@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ScanProgress } from "@/components/ScanProgress";
 import { CommsRipple } from "@/components/CommsRipple";
+import { getAllActiveMissions } from "@/lib/missions/registry";
 
 // ═══════════════════════════════════════════════════════════════════
 // Mission Control: Offline — Phase 2 briefing page
@@ -25,6 +26,7 @@ export default async function MissionsPage() {
     .single();
 
   const trainingDone = profile?.training_certified ?? false;
+  const activeMissions = await getAllActiveMissions();
 
   return (
     <div className="relative flex min-h-screen flex-col bg-[#050B14]">
@@ -89,17 +91,36 @@ export default async function MissionsPage() {
           </p>
         </div>
 
-        {/* Ghost Board — silhouettes of future Quest Cards */}
+        {/* Mission Board — real missions + ghost slots */}
         <div className="mb-8 grid w-full max-w-2xl grid-cols-3 gap-3">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="flex h-28 items-center justify-center rounded-2xl border-2 border-dashed
-                         border-white/8 bg-[#0A1423]/50"
+          {activeMissions.map((m) => (
+            <Link
+              key={m.id}
+              href={`/bridge/lab?mission=${m.id}`}
+              className="flex h-28 flex-col items-center justify-center rounded-2xl border-2
+                         border-[#3B82F644] bg-[#0A1423] transition-all hover:border-[#3B82F6]
+                         hover:shadow-[0_0_15px_#3B82F620]"
             >
-              <span className="text-xs text-white/15">QUEST {i}</span>
-            </div>
+              <span className="font-mono text-xs font-bold text-[#F0E6D3]">
+                {m.title.split(" · ")[0]?.toUpperCase()}
+              </span>
+              <span className="mt-1 font-mono text-[9px] text-[#A8977E]">
+                {m.stats.length} STATS | {m.xpReward} XP
+              </span>
+            </Link>
           ))}
+          {/* Fill remaining slots with ghosts (show at least 3 total) */}
+          {Array.from({ length: Math.max(0, 3 - activeMissions.length) }).map(
+            (_, i) => (
+              <div
+                key={`ghost-${i}`}
+                className="flex h-28 items-center justify-center rounded-2xl border-2 border-dashed
+                           border-white/8 bg-[#0A1423]/50"
+              >
+                <span className="text-xs text-white/15">QUEST {activeMissions.length + i + 1}</span>
+              </div>
+            )
+          )}
         </div>
 
         {/* CTA Buttons */}

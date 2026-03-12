@@ -15,11 +15,18 @@ export interface TrainingCompleteResult {
  * Uses quest_id "training_v1" for idempotent loot award.
  */
 export async function completeTraining(): Promise<ActionResult<TrainingCompleteResult>> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Not authenticated" };
+  let userId: string;
+  if (process.env.NEXT_PUBLIC_DEV_SKIP_AUTH === "true") {
+    const { DEV_USER_ID } = await import("@/lib/supabase/server");
+    userId = DEV_USER_ID;
+  } else {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return { success: false, error: "Not authenticated" };
+    userId = user.id;
+  }
 
   // Award 50 Gold — quest_id ensures idempotency
   const lootResult = await awardLoot(50, "training_complete", "training_v1");
@@ -29,7 +36,7 @@ export async function completeTraining(): Promise<ActionResult<TrainingCompleteR
   await supabaseAdmin
     .from("profiles")
     .update({ training_certified: true })
-    .eq("id", user.id);
+    .eq("id", userId);
 
   return {
     success: true,

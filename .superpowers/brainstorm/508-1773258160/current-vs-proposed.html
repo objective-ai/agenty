@@ -1,0 +1,111 @@
+<h2>The Shift: Lab → Mission Mode</h2>
+<p class="subtitle">Current state vs. what you're describing. Which direction feels right?</p>
+
+<div class="split" style="gap:24px; margin-top: 24px;">
+  <!-- CURRENT -->
+  <div class="mockup" style="border: 2px solid #374151;">
+    <div class="mockup-header" style="background:#0A1423; color:#A8977E; font-family:monospace; font-size:11px; letter-spacing:2px;">CURRENT: INTEL STATION</div>
+    <div class="mockup-body" style="background:#050B14; padding:16px; display:flex; flex-direction:column; gap:12px; min-height:340px;">
+      <!-- Top bar -->
+      <div style="border-bottom:1px solid #1F2937; padding-bottom:8px;">
+        <div style="color:#F0E6D3; font-weight:900; font-size:14px;">INTEL STATION</div>
+        <div style="color:#A8977E; font-size:10px; font-family:monospace;">Upload classified documents · Agent comms</div>
+      </div>
+      <!-- Two columns -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; flex:1;">
+        <!-- Left: dropzone -->
+        <div style="background:#0A1423; border:2px dashed #374151; border-radius:12px; padding:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
+          <div style="color:#A8977E; font-size:20px;">📄</div>
+          <div style="color:#F0E6D3; font-size:10px; font-weight:700;">Drop intel files here</div>
+          <div style="color:#A8977E; font-size:9px;">PDF only · Max 10MB</div>
+        </div>
+        <!-- Right: chat -->
+        <div style="background:#0A1423; border:2px solid #3B82F633; border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; gap:6px; border-bottom:1px solid #3B82F622; padding-bottom:6px;">
+            <div style="width:20px; height:20px; border-radius:50%; border:2px solid #3B82F6; display:flex; align-items:center; justify-content:center; font-size:8px; color:#3B82F6; font-weight:900;">C</div>
+            <span style="color:#3B82F6; font-family:monospace; font-size:9px; font-weight:900; letter-spacing:2px;">COMMS: COOPER</span>
+          </div>
+          <div style="flex:1; color:#A8977E; font-size:9px; font-family:monospace; padding:4px;">
+            &gt; Comms channel open. Say something, Commander.
+          </div>
+          <div style="display:flex; gap:4px;">
+            <div style="flex:1; background:#050B14; border:1px solid #3B82F644; border-radius:8px; padding:5px 8px; font-size:9px; color:#A8977E;">Message Cooper...</div>
+            <div style="background:#3B82F622; border:1px solid #3B82F6; border-radius:8px; padding:5px 8px; font-size:9px; color:#3B82F6; font-weight:900;">SEND</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROPOSED -->
+  <div class="mockup" style="border: 2px solid #3B82F6; box-shadow: 0 0 20px #3B82F633;">
+    <div class="mockup-header" style="background:#0A1423; color:#3B82F6; font-family:monospace; font-size:11px; letter-spacing:2px;">PROPOSED: MISSION MODE</div>
+    <div class="mockup-body" style="background:#050B14; padding:16px; display:flex; flex-direction:column; gap:12px; min-height:340px;">
+      <!-- Top bar with mission title -->
+      <div style="border-bottom:1px solid #3B82F622; padding-bottom:8px; display:flex; align-items:baseline; justify-content:space-between;">
+        <div>
+          <div style="color:#3B82F6; font-family:monospace; font-size:9px; letter-spacing:3px; font-weight:700;">MISSION: ACTIVE</div>
+          <div style="color:#F0E6D3; font-weight:900; font-size:16px; letter-spacing:1px;">REBOOT THE GRID</div>
+        </div>
+        <div style="background:#0A1423; border:1px solid #374151; border-radius:8px; padding:4px 8px; font-size:9px; color:#A8977E; cursor:pointer; font-family:monospace;">📂 LOAD INTEL</div>
+      </div>
+      <!-- Two columns: briefing left, comms right -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; flex:1;">
+        <!-- LEFT: Holographic Briefing Board -->
+        <div style="background:#0A1423; border:2px solid #3B82F633; border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:10px;">
+          <!-- Blueprint area -->
+          <div style="background:#051020; border:1px solid #3B82F644; border-radius:8px; padding:8px; text-align:center; min-height:80px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div style="color:#3B82F644; font-size:9px; font-family:monospace; letter-spacing:2px;">[ TACTICAL DIAGRAM ]</div>
+            <div style="color:#3B82F622; font-size:22px; margin-top:4px;">🌉</div>
+          </div>
+          <!-- Big question -->
+          <div style="color:#F0E6D3; font-size:11px; font-weight:900; line-height:1.4;">THE BIG QUESTION</div>
+          <div style="color:#A8977E; font-size:10px; line-height:1.5; font-family:monospace;">What is the total cable length needed to span 666m with a 37.5m wide deck?</div>
+          <!-- Live stats -->
+          <div style="display:flex; flex-direction:column; gap:4px; margin-top:auto;">
+            <div style="color:#A8977E; font-size:8px; font-family:monospace; letter-spacing:2px;">LIVE STATS</div>
+            <div style="display:flex; justify-content:space-between; background:#051020; padding:5px 8px; border-radius:6px; border:1px solid #3B82F622;">
+              <span style="color:#A8977E; font-size:9px; font-family:monospace;">Length Calc</span>
+              <span style="color:#3B82F6; font-size:9px; font-family:monospace; font-weight:700;">— m</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; background:#051020; padding:5px 8px; border-radius:6px; border:1px solid #3B82F622;">
+              <span style="color:#A8977E; font-size:9px; font-family:monospace;">XP Earned</span>
+              <span style="color:#10B981; font-size:9px; font-family:monospace; font-weight:700;">+0 XP</span>
+            </div>
+          </div>
+        </div>
+        <!-- RIGHT: Comms (unchanged) -->
+        <div style="background:#0A1423; border:2px solid #3B82F633; border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; gap:6px; border-bottom:1px solid #3B82F622; padding-bottom:6px;">
+            <div style="width:20px; height:20px; border-radius:50%; border:2px solid #3B82F6; display:flex; align-items:center; justify-content:center; font-size:8px; color:#3B82F6; font-weight:900;">C</div>
+            <span style="color:#3B82F6; font-family:monospace; font-size:9px; font-weight:900; letter-spacing:2px;">COMMS: COOPER</span>
+            <div style="margin-left:auto; width:6px; height:6px; background:#3B82F6; border-radius:50%; animation: pulse 1s infinite;"></div>
+          </div>
+          <div style="flex:1; color:#A8977E; font-size:9px; font-family:monospace; padding:4px;">
+            &gt; Comms channel open. Say something, Commander.
+          </div>
+          <div style="display:flex; gap:4px;">
+            <div style="flex:1; background:#050B14; border:1px solid #3B82F644; border-radius:8px; padding:5px 8px; font-size:9px; color:#A8977E;">Message Cooper...</div>
+            <div style="background:#3B82F622; border:1px solid #3B82F6; border-radius:8px; padding:5px 8px; font-size:9px; color:#3B82F6; font-weight:900;">SEND</div>
+          </div>
+        </div>
+      </div>
+      <!-- Load Intel drawer hint -->
+      <div style="background:#0A1423; border:1px dashed #374151; border-radius:8px; padding:8px; text-align:center; color:#A8977E; font-size:9px; font-family:monospace;">
+        📂 Intel Drawer — slides in from right when "LOAD INTEL" is tapped
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:20px; background:#0A1423; border:1px solid #374151; border-radius:12px; padding:16px;">
+  <div style="color:#F0E6D3; font-size:12px; font-weight:700; margin-bottom:8px;">Key changes in Mission Mode:</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div style="color:#10B981; font-size:11px;">✓ Left pane = Holographic Briefing Board</div>
+    <div style="color:#10B981; font-size:11px;">✓ Mission title + big question always visible</div>
+    <div style="color:#10B981; font-size:11px;">✓ Live stats update as Kai answers</div>
+    <div style="color:#10B981; font-size:11px;">✓ KnowledgeDropzone moved to hidden drawer</div>
+    <div style="color:#A8977E; font-size:11px;">? "LOAD INTEL" button triggers slide-over</div>
+    <div style="color:#A8977E; font-size:11px;">? Briefing board content: static vs dynamic?</div>
+  </div>
+</div>

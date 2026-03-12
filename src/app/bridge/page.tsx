@@ -50,18 +50,21 @@ export default async function BridgePage() {
             <DailyClaim />
           </div>
 
-          <div className="rounded-2xl border-2 border-white/10 bg-[#0A1423] p-4">
-            <p className="mb-1 text-xs uppercase tracking-wider text-[#A8977E]">
-              Active Quest
-            </p>
-            <p className="mb-3 font-bold text-[#F0E6D3]">Training Room</p>
-            <p className="mb-4 text-sm text-[#A8977E]">
-              Calibrate your HUD and learn the field mechanics. Earn 50 Gold on completion.
-            </p>
-            <StartQuestButton />
-          </div>
+          {!profile?.training_certified && (
+            <div className="rounded-2xl border-2 border-white/10 bg-[#0A1423] p-4">
+              <p className="mb-1 text-xs uppercase tracking-wider text-[#A8977E]">
+                Active Quest
+              </p>
+              <p className="mb-3 font-bold text-[#F0E6D3]">Training Room</p>
+              <p className="mb-4 text-sm text-[#A8977E]">
+                Calibrate your HUD and learn the field mechanics. Earn 50 Gold on completion.
+              </p>
+              <StartQuestButton />
+            </div>
+          )}
         </main>
       </div>
+
     </div>
   );
 }

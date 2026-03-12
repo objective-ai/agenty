@@ -1,0 +1,153 @@
+<h2>MissionBriefingBoard States</h2>
+<p class="subtitle">Left pane in 3 states: Ghost → Active → Stat Update. Does this feel right?</p>
+
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:20px;">
+
+  <!-- STATE 1: GHOST (Tactical Scan) -->
+  <div style="background:#050B14; border:2px solid #1F2937; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px;">
+    <div style="color:#A8977E; font-family:monospace; font-size:9px; letter-spacing:3px; text-align:center;">STATE 1 — GHOST</div>
+
+    <!-- Pulsing grid placeholder -->
+    <div style="
+      background: repeating-linear-gradient(0deg, transparent, transparent 18px, #3B82F608 18px, #3B82F608 19px),
+                  repeating-linear-gradient(90deg, transparent, transparent 18px, #3B82F608 18px, #3B82F608 19px);
+      border:1px solid #3B82F622; border-radius:10px; min-height:100px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    ">
+      <div style="color:#3B82F633; font-family:monospace; font-size:10px; letter-spacing:2px;">TACTICAL SCAN</div>
+      <div style="color:#3B82F622; font-size:9px; font-family:monospace; animation:pulse 2s infinite;">● ● ●</div>
+    </div>
+
+    <!-- Skeleton question -->
+    <div style="background:#0A1423; border-radius:6px; height:10px; width:80%;"></div>
+    <div style="background:#0A1423; border-radius:6px; height:10px; width:60%;"></div>
+
+    <!-- Skeleton stats -->
+    <div style="display:flex; flex-direction:column; gap:5px; margin-top:4px;">
+      <div style="background:#0A1423; border:1px solid #1F2937; border-radius:8px; height:32px;"></div>
+      <div style="background:#0A1423; border:1px solid #1F2937; border-radius:8px; height:32px;"></div>
+    </div>
+
+    <!-- Skeleton objective -->
+    <div style="background:#0A1423; border-radius:8px; height:40px; margin-top:auto;"></div>
+  </div>
+
+  <!-- STATE 2: ACTIVE (Mission Live) -->
+  <div style="background:#050B14; border:2px solid #3B82F6; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px; box-shadow: 0 0 24px #3B82F622;">
+    <div style="color:#3B82F6; font-family:monospace; font-size:9px; letter-spacing:3px; text-align:center;">STATE 2 — ACTIVE</div>
+
+    <!-- Blueprint image area -->
+    <div style="
+      background: repeating-linear-gradient(0deg, transparent, transparent 14px, #3B82F60A 14px, #3B82F60A 15px),
+                  repeating-linear-gradient(90deg, transparent, transparent 14px, #3B82F60A 14px, #3B82F60A 15px);
+      border:1px solid #3B82F644; border-radius:10px; min-height:90px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; position:relative; overflow:hidden;
+    ">
+      <!-- Bridge SVG sketch -->
+      <svg width="140" height="50" viewBox="0 0 140 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Deck -->
+        <line x1="10" y1="30" x2="130" y2="30" stroke="#3B82F6" stroke-width="2" stroke-opacity="0.6"/>
+        <!-- Left tower -->
+        <line x1="40" y1="8" x2="40" y2="30" stroke="#3B82F6" stroke-width="1.5" stroke-opacity="0.8"/>
+        <!-- Right tower -->
+        <line x1="100" y1="8" x2="100" y2="30" stroke="#3B82F6" stroke-width="1.5" stroke-opacity="0.8"/>
+        <!-- Left cables -->
+        <line x1="40" y1="10" x2="15" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.5"/>
+        <line x1="40" y1="10" x2="28" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.5"/>
+        <line x1="40" y1="10" x2="52" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.5"/>
+        <!-- Right cables -->
+        <line x1="100" y1="10" x2="125" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.5"/>
+        <line x1="100" y1="10" x2="112" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.5"/>
+        <line x1="100" y1="10" x2="88" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.5"/>
+        <!-- Water -->
+        <path d="M10 36 Q25 33 40 36 Q55 39 70 36 Q85 33 100 36 Q115 39 130 36" stroke="#3B82F6" stroke-width="0.6" stroke-opacity="0.3" fill="none"/>
+      </svg>
+      <div style="color:#3B82F666; font-family:monospace; font-size:8px; letter-spacing:2px;">DRAGON BRIDGE · DA NANG</div>
+    </div>
+
+    <!-- Big Question -->
+    <div style="color:#F0E6D3; font-size:10px; font-weight:900; line-height:1.5; font-family:monospace;">
+      MISSION: Calculate total cable length for a 666m span with 37.5m deck width.
+    </div>
+
+    <!-- Stat Gauges -->
+    <div style="display:flex; flex-direction:column; gap:5px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#0A1423; border:1px solid #3B82F633; border-radius:8px; padding:6px 10px;">
+        <span style="color:#A8977E; font-family:monospace; font-size:9px; letter-spacing:1px;">SPAN LENGTH</span>
+        <span style="color:#3B82F6; font-family:monospace; font-size:12px; font-weight:900; text-shadow: 0 0 8px #3B82F688;">—</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#0A1423; border:1px solid #3B82F633; border-radius:8px; padding:6px 10px;">
+        <span style="color:#A8977E; font-family:monospace; font-size:9px; letter-spacing:1px;">CABLE COUNT</span>
+        <span style="color:#3B82F6; font-family:monospace; font-size:12px; font-weight:900; text-shadow: 0 0 8px #3B82F688;">—</span>
+      </div>
+    </div>
+
+    <!-- Objective Card -->
+    <div style="background:#0A1423; border:2px solid #3B82F644; border-radius:10px; padding:8px 10px; margin-top:auto;">
+      <div style="color:#A8977E; font-family:monospace; font-size:8px; letter-spacing:2px; margin-bottom:4px;">CURRENT OBJECTIVE</div>
+      <div style="color:#F0E6D3; font-size:10px; font-weight:700;">Step 1: Identify the bridge dimensions</div>
+    </div>
+  </div>
+
+  <!-- STATE 3: STAT UPDATE (with flash) -->
+  <div style="background:#050B14; border:2px solid #3B82F6; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px; box-shadow: 0 0 32px #3B82F644;">
+    <div style="color:#10B981; font-family:monospace; font-size:9px; letter-spacing:3px; text-align:center;">STATE 3 — STAT UPDATE</div>
+
+    <!-- Same blueprint -->
+    <div style="
+      background: repeating-linear-gradient(0deg, transparent, transparent 14px, #3B82F60A 14px, #3B82F60A 15px),
+                  repeating-linear-gradient(90deg, transparent, transparent 14px, #3B82F60A 14px, #3B82F60A 15px);
+      border:1px solid #3B82F644; border-radius:10px; min-height:90px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+    ">
+      <svg width="140" height="50" viewBox="0 0 140 50" fill="none">
+        <line x1="10" y1="30" x2="130" y2="30" stroke="#3B82F6" stroke-width="2" stroke-opacity="0.8"/>
+        <line x1="40" y1="8" x2="40" y2="30" stroke="#3B82F6" stroke-width="1.5" stroke-opacity="0.9"/>
+        <line x1="100" y1="8" x2="100" y2="30" stroke="#3B82F6" stroke-width="1.5" stroke-opacity="0.9"/>
+        <line x1="40" y1="10" x2="15" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.7"/>
+        <line x1="40" y1="10" x2="28" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.7"/>
+        <line x1="40" y1="10" x2="52" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.7"/>
+        <line x1="100" y1="10" x2="125" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.7"/>
+        <line x1="100" y1="10" x2="112" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.7"/>
+        <line x1="100" y1="10" x2="88" y2="30" stroke="#3B82F6" stroke-width="0.8" stroke-opacity="0.7"/>
+        <path d="M10 36 Q25 33 40 36 Q55 39 70 36 Q85 33 100 36 Q115 39 130 36" stroke="#3B82F6" stroke-width="0.6" stroke-opacity="0.4" fill="none"/>
+      </svg>
+      <div style="color:#3B82F6AA; font-family:monospace; font-size:8px; letter-spacing:2px;">DRAGON BRIDGE · DA NANG</div>
+    </div>
+
+    <div style="color:#F0E6D3; font-size:10px; font-weight:900; line-height:1.5; font-family:monospace;">
+      MISSION: Calculate total cable length for a 666m span with 37.5m deck width.
+    </div>
+
+    <!-- Stats — one updated (glowing) -->
+    <div style="display:flex; flex-direction:column; gap:5px;">
+      <!-- UPDATED stat — glows + scale-bounce effect represented by bold border -->
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#0A1423; border:2px solid #3B82F6; border-radius:8px; padding:6px 10px; box-shadow: 0 0 16px #3B82F655; transform: scale(1.02);">
+        <span style="color:#A8977E; font-family:monospace; font-size:9px; letter-spacing:1px;">SPAN LENGTH</span>
+        <div style="display:flex; align-items:baseline; gap:3px;">
+          <span style="color:#3B82F6; font-family:monospace; font-size:14px; font-weight:900; text-shadow: 0 0 12px #3B82F6;">666</span>
+          <span style="color:#3B82F666; font-family:monospace; font-size:9px;">m</span>
+          <span style="color:#10B981; font-size:9px; margin-left:4px;">▲</span>
+        </div>
+      </div>
+      <!-- Unchanged stat -->
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#0A1423; border:1px solid #3B82F633; border-radius:8px; padding:6px 10px;">
+        <span style="color:#A8977E; font-family:monospace; font-size:9px; letter-spacing:1px;">CABLE COUNT</span>
+        <span style="color:#3B82F6; font-family:monospace; font-size:12px; font-weight:900; text-shadow: 0 0 8px #3B82F688;">—</span>
+      </div>
+    </div>
+
+    <div style="background:#0A1423; border:2px solid #3B82F644; border-radius:10px; padding:8px 10px; margin-top:auto;">
+      <div style="color:#A8977E; font-family:monospace; font-size:8px; letter-spacing:2px; margin-bottom:4px;">CURRENT OBJECTIVE</div>
+      <div style="color:#F0E6D3; font-size:10px; font-weight:700;">Step 2: Calculate cable geometry</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:20px; background:#0A1423; border:1px solid #374151; border-radius:12px; padding:14px; font-size:11px; color:#A8977E; line-height:1.7;">
+  <strong style="color:#F0E6D3;">Framer Motion animations:</strong>
+  Ghost→Active: <code style="color:#3B82F6;">flickerIn</code> (opacity 0→0.3→0→1 over 600ms) ·
+  Stat update: <code style="color:#3B82F6;">scale(1→1.06→1) + glow pulse</code> over 400ms ·
+  ObjectiveCard step change: <code style="color:#3B82F6;">slideUp + fadeIn</code>
+</div>

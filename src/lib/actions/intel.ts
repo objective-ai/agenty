@@ -32,6 +32,12 @@ const OVERLAP_CHARS = 200; // ~50 tokens overlap
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 async function getAuthenticatedUserId(): Promise<string | null> {
+  // DEV BYPASS: matches /api/chat dev bypass
+  if (process.env.NEXT_PUBLIC_DEV_SKIP_AUTH === "true") {
+    const { DEV_USER_ID } = await import("@/lib/supabase/server");
+    return DEV_USER_ID;
+  }
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -169,4 +175,76 @@ export async function uploadIntel(
     success: true,
     data: { chunkCount: chunks.length, fileName: file.name },
   };
+}
+
+// ── List uploaded files ───────────────────────────────────────────────────────
+
+export interface IntelFile {
+  source: string;
+  uploadedAt: string;
+  chunkCount: number;
+}
+
+/**
+ * Returns one entry per unique source file the user has uploaded,
+ * with the chunk count and upload timestamp.
+ */
+export async function listIntelFiles(): Promise<ActionResult<IntelFile[]>> {
+  const userId = await getAuthenticatedUserId();
+  if (!userId) return { success: false, error: "Not authenticated" };
+
+  const { data, error } = await supabaseAdmin
+    .from("knowledge_base")
+    .select("metadata")
+    .eq("profile_id", userId);
+
+  if (error) {
+    console.error("[listIntelFiles] error:", error.message);
+    return { success: false, error: "Failed to fetch intel files" };
+  }
+
+  // Aggregate by source filename
+  const map = new Map<string, { uploadedAt: string; chunkCount: number }>();
+  for (const row of data ?? []) {
+    const { source, uploadedAt } = row.metadata as { source: string; uploadedAt: string };
+    const existing = map.get(source);
+    if (!existing) {
+      map.set(source, { uploadedAt, chunkCount: 1 });
+    } else {
+      existing.chunkCount += 1;
+    }
+  }
+
+  const files: IntelFile[] = Array.from(map.entries())
+    .map(([source, { uploadedAt, chunkCount }]) => ({ source, uploadedAt, chunkCount }))
+    .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
+
+  return { success: true, data: files };
+}
+
+// ── Delete a file's chunks ────────────────────────────────────────────────────
+
+/**
+ * Deletes ALL knowledge_base chunks for a given source filename.
+ * Used to remove duplicate uploads.
+ */
+export async function deleteIntelFile(
+  source: string
+): Promise<ActionResult<{ deleted: number }>> {
+  const userId = await getAuthenticatedUserId();
+  if (!userId) return { success: false, error: "Not authenticated" };
+
+  const { data, error } = await supabaseAdmin
+    .from("knowledge_base")
+    .delete()
+    .eq("profile_id", userId)
+    .filter("metadata->>source", "eq", source)
+    .select("id");
+
+  if (error) {
+    console.error("[deleteIntelFile] error:", error.message);
+    return { success: false, error: "Failed to delete intel file" };
+  }
+
+  return { success: true, data: { deleted: (data ?? []).length } };
 }

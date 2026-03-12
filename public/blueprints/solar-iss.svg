@@ -1,0 +1,17 @@
+<svg viewBox="0 0 280 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g id="station_core" stroke="#3B82F6" stroke-width="2" stroke-opacity="0.5">
+    <rect x="120" y="40" width="40" height="60" rx="2" />
+    <circle cx="140" cy="70" r="10" />
+  </g>
+  <g id="solar_panels" stroke="#3B82F6" stroke-width="1.5" stroke-opacity="0.5">
+    <rect x="20" y="55" width="80" height="30" />
+    <rect x="180" y="55" width="80" height="30" />
+    <line x1="30" y1="55" x2="30" y2="85" stroke-width="0.5" />
+    <line x1="60" y1="55" x2="60" y2="85" stroke-width="0.5" />
+  </g>
+  <g id="panel_pivot" stroke="#3B82F6" stroke-width="2" stroke-opacity="0.5">
+    <line x1="100" y1="70" x2="120" y2="70" />
+    <line x1="160" y1="70" x2="180" y2="70" />
+  </g>
+  <text x="140" y="130" text-anchor="middle" font-family="monospace" font-size="7" fill="#3B82F6" fill-opacity="0.4" letter-spacing="2">LOW EARTH ORBIT · ARRAY ALIGNMENT</text>
+</svg>

@@ -1,6 +1,6 @@
 # External Integrations
 
-**Analysis Date:** 2026-03-10
+**Analysis Date:** 2026-03-10 (updated 2026-03-12)
 
 ## APIs & External Services
 
@@ -8,9 +8,30 @@
 - Supabase - Primary backend service
   - SDK/Client: `@supabase/supabase-js` (2.99.0)
   - SSR Adapter: `@supabase/ssr` (0.9.0)
-  - Auth: Supabase auth service (JWT-based)
+  - Auth: Supabase auth service (JWT-based, magic-link + PIN login)
+  - Vector: pgvector extension for knowledge embeddings (HNSW index)
   - URL env var: `NEXT_PUBLIC_SUPABASE_URL`
   - Key env var: `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - Admin key env var: `SUPABASE_SERVICE_ROLE_KEY` (server-only)
+
+**AI / LLM (Phases 2.5–2.6):**
+- Anthropic Claude (via AI SDK v6)
+  - SDK: `ai` (Vercel AI SDK v6), `@ai-sdk/anthropic`
+  - Model: `claude-sonnet-4-20250514`
+  - Endpoints:
+    - `/api/chat` — streaming chat with agent personas, Mission Mode tool calls (`updateStat`), grounded system prompts with Math-First Rule
+    - `/api/generate-mission` — structured object generation via `generateObject` with Zod schema, 11-rule validation, single retry on failure
+  - Key env var: `ANTHROPIC_API_KEY`
+- OpenAI (embeddings only)
+  - SDK: `openai`
+  - Model: `text-embedding-3-small` (1536 dimensions)
+  - Key env var: `OPENAI_API_KEY`
+  - Used for: PDF chunk embeddings in `knowledge_base` for RAG retrieval
+
+**Animation:**
+- Framer Motion via `motion/react`
+  - Import: `from "motion/react"` (NOT `framer-motion` — avoids React 19 hydration errors)
+  - Used for: AnimatePresence, briefing board transitions, Intel Drawer slide-over
 
 ## Data Storage
 
@@ -20,7 +41,9 @@
   - Client: `@supabase/supabase-js` (JavaScript/TypeScript client)
   - Browser client: `src/lib/supabase/client.ts` → `createBrowserClient()`
   - Server client: `src/lib/supabase/server.ts` → `createServerClient()` with Next.js cookie integration
-  - Usage: Persists quest data, player stats, loot inventory, daily streaks, XP progress
+  - Tables: profiles, loot_ledger, energy_logs, knowledge_base, pin_attempts, missions
+  - Usage: Persists quest data, player stats, loot inventory, daily streaks, XP progress, AI-generated missions
+  - RPCs: `award_loot`, `spend_energy`, `get_uid_by_email` (via supabaseAdmin)
 
 **File Storage:**
 - Not configured - Appears to use local state or planned for future implementation
@@ -63,12 +86,17 @@
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...          # server-only, admin operations
+ANTHROPIC_API_KEY=sk-ant-...                   # server-only, Claude chat
+OPENAI_API_KEY=sk-...                          # server-only, embeddings
+NEXT_PUBLIC_SITE_URL=http://localhost:3000      # magic-link redirect base
+NEXT_PUBLIC_DEV_SKIP_AUTH=true                  # dev only, bypasses auth gates
 ```
 
 **Critical Notes:**
-- Both vars are prefixed with `NEXT_PUBLIC_` - They ARE exposed to client-side code
-- This is intentional for Supabase (anon key has read-only permissions per RLS)
-- Sensitive server-only operations should use a service role key in a separate env var if needed
+- `NEXT_PUBLIC_` vars ARE exposed to client-side code (intentional for Supabase anon key)
+- `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` are server-only — never prefix with `NEXT_PUBLIC_`
+- `NEXT_PUBLIC_DEV_SKIP_AUTH` must be `false` in production
 
 **Configuration Storage:**
 - Development: `.env.local` (Git-ignored)
@@ -85,14 +113,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
 ## Related Services (Not Yet Integrated)
 
 **Per CLAUDE.md project guidelines:**
-- LangGraph - Specified as part of tech stack but not yet in dependencies
-- Framer Motion - Specified for animations but not yet in dependencies
-- These are planned for future implementation as features expand
+- LangGraph - Specified as part of tech stack but not yet in dependencies (deferred until multi-step agent workflows needed)
 
 ## Data Security
 
 **Row-Level Security (RLS):**
-- Supabase RLS policies should be configured in database (not visible in codebase)
+- RLS policies on: profiles, loot_ledger, energy_logs, knowledge_base, pin_attempts, missions
+- Missions table: parents CRUD own rows (created_by = auth.uid()::text), anyone reads active missions
 - Anon key usage restricted to public/user-owned data via RLS
 
 **Server vs. Client Auth:**
@@ -102,4 +129,4 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
 
 ---
 
-*Integration audit: 2026-03-10*
+*Integration audit: 2026-03-10 (updated 2026-03-12 — added Anthropic, OpenAI, motion/react, missions table, economy RPCs)*

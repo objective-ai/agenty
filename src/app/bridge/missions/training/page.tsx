@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { completeTraining } from "@/lib/actions/training";
 import { useEconomy } from "@/contexts/EconomyContext";
 import { useAgent } from "@/contexts/AgentContext";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
+import { HudStatusRail } from "@/components/HudStatusRail";
 
 // ═══════════════════════════════════════════════════════════════════
 // Training Room — 3 interactive calibration stations
@@ -89,14 +91,25 @@ export default function TrainingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050B14] px-4 py-10">
+    <div className="flex min-h-screen flex-col bg-[#050B14]">
+      <HudStatusRail />
+      <div className="px-4 py-10">
       <div className="mx-auto max-w-2xl">
 
         {/* Header */}
         <div className="mb-8">
-          <p className="mb-1 text-xs uppercase tracking-[0.3em] text-[#A8977E]">
-            Mission Control
-          </p>
+          <div className="mb-1 flex items-center gap-3">
+            <Link
+              href="/bridge"
+              className="text-xs uppercase tracking-[0.3em] text-[#A8977E] transition-colors hover:text-[#F0E6D3]"
+            >
+              ← BRIDGE
+            </Link>
+            <span className="text-xs text-[#A8977E]/40">/</span>
+            <p className="text-xs uppercase tracking-[0.3em] text-[#A8977E]">
+              Mission Control
+            </p>
+          </div>
           <h1 className="text-3xl font-black uppercase text-[#F0E6D3]">
             TRAINING ROOM
           </h1>
@@ -231,6 +244,14 @@ export default function TrainingPage() {
             >
               <p className="text-xl font-black text-[#F0E6D3]">TRAINING CERTIFIED</p>
               <p className="mt-1 text-sm text-[#10B981]">+50 Gold awarded. Badge unlocked.</p>
+              <Link
+                href="/bridge"
+                className="mt-4 inline-flex items-center gap-2 rounded-xl border-2 border-[#10B981]
+                           bg-[#10B981]/20 px-6 py-3 text-sm font-bold uppercase tracking-wider
+                           text-[#10B981] transition-all hover:bg-[#10B981]/30"
+              >
+                RETURN TO BRIDGE →
+              </Link>
             </motion.div>
           ) : (
             <motion.button
@@ -255,6 +276,7 @@ export default function TrainingPage() {
           )}
           {error && <p className="mt-2 text-center text-xs text-red-400">{error}</p>}
         </div>
+      </div>
       </div>
     </div>
   );

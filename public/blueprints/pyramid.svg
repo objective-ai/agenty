@@ -1,0 +1,9 @@
+<svg viewBox="0 0 280 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path id="pyramid_base" d="M 40 110 L 240 110 L 210 130 L 70 130 Z" stroke="#3B82F6" stroke-width="2" stroke-opacity="0.5" />
+  <path id="pyramid_apex" d="M 140 20 L 40 110 L 240 110 Z" stroke="#3B82F6" stroke-width="2" stroke-opacity="0.5" />
+  <g id="pyramid_blocks" stroke="#3B82F6" stroke-width="1" stroke-opacity="0.3">
+    <line x1="90" y1="65" x2="190" y2="65" />
+    <line x1="65" y1="87" x2="215" y2="87" />
+  </g>
+  <text x="140" y="135" text-anchor="middle" font-family="monospace" font-size="7" fill="#3B82F6" fill-opacity="0.4" letter-spacing="2">GIZA PLATEAU · STRUCTURAL SCAN</text>
+</svg>

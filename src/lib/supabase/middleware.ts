@@ -10,8 +10,14 @@ import { NextResponse, type NextRequest } from "next/server";
  *  - /setup      always allowed   (parent lands here after magic link)
  */
 export async function updateSession(request: NextRequest) {
+  const supabaseResponse = NextResponse.next({ request });
+
+  // DEV BYPASS: skip Supabase entirely when NEXT_PUBLIC_DEV_SKIP_AUTH=true
+  const devSkipAuth = process.env.NEXT_PUBLIC_DEV_SKIP_AUTH === "true";
+  if (devSkipAuth) return supabaseResponse;
+
   // Start with a "pass-through" response so cookies can be forwarded
-  let supabaseResponse = NextResponse.next({
+  let supabaseResponseWithCookies = NextResponse.next({
     request,
   });
 
@@ -30,13 +36,13 @@ export async function updateSession(request: NextRequest) {
           );
 
           // Recreate the response so it picks up the updated request cookies
-          supabaseResponse = NextResponse.next({
+          supabaseResponseWithCookies = NextResponse.next({
             request,
           });
 
           // Set cookies on the outgoing response (sent to the browser)
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            supabaseResponseWithCookies.cookies.set(name, value, options)
           );
         },
       },
@@ -69,5 +75,5 @@ export async function updateSession(request: NextRequest) {
 
   // /setup is always allowed (parent needs access after magic link)
 
-  return supabaseResponse;
+  return supabaseResponseWithCookies;
 }

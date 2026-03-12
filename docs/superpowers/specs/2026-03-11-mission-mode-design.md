@@ -1,8 +1,19 @@
 # Mission Mode — `/bridge/lab` Redesign
 
 **Date:** 2026-03-11
-**Status:** Approved for planning
+**Status:** Implemented (with post-implementation corrections below)
 **Scope:** Refactor `/bridge/lab` from the two-pane Intel Station into Mission Mode — a Holographic Briefing Board (left) + Agent Comms panel (right), with an Intel Drawer slide-over for PDF uploads.
+
+> **OUTDATED WARNING (2026-03-12):** This spec describes the original design which coupled board activation to an `initMission` AI tool call. This was **removed** because `toolChoice: "auto"` is non-deterministic — the model sometimes skips tool calls, leaving the board permanently blank.
+>
+> **Current architecture (see CLAUDE.md and actual code):**
+> - Board activates **immediately on mount** via `dispatch(MISSION_INIT)` with `config.defaultObjective` — no AI dependency
+> - `initMission` tool was **removed entirely** — only `updateStat` remains
+> - `SIGNAL LOST` / 15s ghost timeout was **removed** — board never stays in ghost state
+> - `MissionConfig` now has `defaultObjective` and `description` fields
+> - System prompt includes real mission context (title, description, stat goals) — prevents hallucination
+>
+> **Do NOT re-introduce `initMission` or couple UI state to AI tool calls.**
 
 ---
 
@@ -238,7 +249,13 @@ export function MissionModeShell({ config }: { config: MissionConfig }) {
 
 ### 2.4 Tool Call Interception — AI SDK v6 Pattern
 
-**Important:** `useChat` in Vercel AI SDK v6 (`@ai-sdk/react`) does NOT have an `onToolCall` option. Tool calls appear as message parts of type `"tool-call"` inside `UIMessage.parts`. Intercept them in a `useEffect` inside `CommsPanel`.
+**Important:** `useChat` in Vercel AI SDK v6 (`@ai-sdk/react`) does NOT have an `onToolCall` option. Tool calls appear as message parts inside `UIMessage.parts`. Intercept them in a `useEffect` inside `CommsPanel`.
+
+**AI SDK v6 static vs dynamic tool part types (critical gotcha):**
+- Tools registered with an `execute` function are **static tools**. Their parts surface with `type: "tool-<toolName>"` (e.g. `"tool-initMission"`, `"tool-updateStat"`). Check state `"output-available"` to read results.
+- Tools WITHOUT `execute` are **dynamic tools**. Their parts have `type: "dynamic-tool"` with a `toolName` property.
+
+`initMission` and `updateStat` MUST have `execute: async () => ({ ok: true })` so the model continues to a text response after the tool call. Without `execute`, the stream ends after the tool call and no text bubble is produced.
 
 ```tsx
 // Inside CommsPanel — add to existing component
@@ -247,12 +264,26 @@ useEffect(() => {
   if (!lastMsg || lastMsg.role !== 'assistant') return;
 
   for (const part of lastMsg.parts) {
-    if (part.type === 'tool-call') {
-      if (part.toolName === 'initMission') {
-        dispatchMission({ type: 'MISSION_INIT', payload: part.args as { objective: string } });
-      } else if (part.toolName === 'updateStat') {
-        dispatchMission({ type: 'STAT_UPDATE', payload: part.args as { id: string; value: number; objective?: string } });
-      }
+    let toolName: string | null = null;
+    let toolCallId: string | null = null;
+
+    if (part.type === 'tool-initMission' || part.type === 'tool-updateStat') {
+      // Static tool (has execute) — type is "tool-<toolName>", dispatch on output-available
+      const p = part as unknown as { toolCallId: string; state: string; input: unknown };
+      if (p.state !== 'output-available') continue;
+      toolCallId = p.toolCallId;
+      toolName = part.type === 'tool-initMission' ? 'initMission' : 'updateStat';
+    }
+
+    if (!toolName || !toolCallId) continue;
+    if (dispatchedToolCallIds.current.has(toolCallId)) continue;
+    dispatchedToolCallIds.current.add(toolCallId);
+
+    const args = (part as unknown as { input: unknown }).input;
+    if (toolName === 'initMission') {
+      dispatchMission({ type: 'MISSION_INIT', payload: args as { objective: string } });
+    } else if (toolName === 'updateStat') {
+      dispatchMission({ type: 'STAT_UPDATE', payload: args as { id: string; value: number; objective?: string } });
     }
   }
 }, [messages, dispatchMission]);   // dispatchMission in dependency array — stable identity from useReducer, no extra memoization needed
@@ -268,17 +299,19 @@ import { z } from 'zod';
 const tools = missionId ? {
   initMission: tool({
     description: 'Initialize the mission briefing board with the opening objective.',
-    parameters: z.object({
+    inputSchema: z.object({
       objective: z.string().describe('The first objective shown on the briefing board.'),
     }),
+    execute: async () => ({ ok: true }),  // REQUIRED: makes this a static tool; without it the stream ends after the tool call
   }),
   updateStat: tool({
     description: 'Update a stat gauge on the briefing board and highlight the corresponding blueprint element.',
-    parameters: z.object({
+    inputSchema: z.object({
       id: z.string().describe('Stat ID from mission config. For Dragon Bridge: "span", "cables", or "towers".'),
       value: z.number().describe('The numeric value to display.'),
       objective: z.string().optional().describe('Updated objective text. Omit if unchanged.'),
     }),
+    execute: async () => ({ ok: true }),  // REQUIRED: same reason
   }),
 } : undefined;
 
@@ -286,10 +319,9 @@ const result = streamText({
   model: anthropic("claude-sonnet-4-20250514"),
   system: systemPrompt,
   messages: modelMessages,
-  ...(tools ? { tools, toolChoice: 'auto', maxSteps: 2 } : {}),
-  // maxSteps: 2 allows the model to emit a tool call AND a follow-up text response
-  // in the same stream. Without this, a tool-call-only response produces a blank
-  // assistant bubble in CommsPanel.
+  ...(tools ? { tools, toolChoice: 'auto', stopWhen: stepCountIs(3) } : {}),
+  // stopWhen: stepCountIs(3) allows the model to emit initMission + updateStat + a text response
+  // in the same stream. maxSteps does not exist in AI SDK v6 — use stopWhen imported from "ai".
 });
 ```
 

@@ -1,6 +1,6 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-03-10
+**Analysis Date:** 2026-03-10 (updated 2026-03-12)
 
 ## Tech Debt
 
@@ -21,25 +21,11 @@
   4. Wrap components in Suspense boundaries with error states
   5. Add real-time subscription hooks to energy_logs and loot_ledger using `onAuthStateChange`
 
-**No Server Actions Implemented:**
-- Issue: PLAN.md specifies `awardLoot()` and `spendEnergy()` Server Actions as critical for security ("Loot Guard"), but none exist
-- Files: `src/lib/supabase/` (missing actions)
-- Impact: No ability to safely award gold, spend energy, or track transactions. Quest completion will not persist. Security model breaks without server-side validation.
-- Fix approach:
-  1. Create `src/lib/supabase/actions.ts` with `awardLoot()`, `spendEnergy()`, `claimQuest()` using service_role key
-  2. Each action must validate auth.uid() against profile_id before mutating
-  3. Wrap actions with try/catch returning typed Result<T, E>
-  4. Add audit logging to metadata column in loot_ledger
+**~~No Server Actions Implemented~~ (RESOLVED 2026-03-12):**
+- Server Actions fully implemented across 5 files: `auth.ts` (sendMagicLink, setupChildAccount, loginWithPin, logOut), `economy.ts` (awardLoot, spendEnergy), `intel.ts` (uploadIntel, listIntelFiles, deleteIntelFile), `missions.ts` (saveMission, updateMissionStatus, deleteMission, getMyMissions), `agent.ts` (saveAgentSelection). Economy Loot Guard pattern enforced — client cannot supply amounts.
 
-**Incomplete Auth Scaffolding:**
-- Issue: PLAN.md Task 4 "Auth Scaffold" is marked incomplete. No auth middleware, no protected routes, no session management
-- Files: `src/app/layout.tsx` (no AuthProvider), missing middleware.ts, no auth context
-- Impact: Entire app is unprotected. No way to identify current user. Server Actions will fail without auth.uid(). Login/logout flow missing.
-- Fix approach:
-  1. Create `src/middleware.ts` to check session and redirect unauthenticated to login
-  2. Create `src/app/auth/` for login, signup, callback routes using Supabase Auth
-  3. Add AuthProvider wrapper in layout.tsx using `@supabase/ssr` hooks
-  4. Implement magic link or OAuth flow per PLAN.md spec
+**~~Incomplete Auth Scaffolding~~ (RESOLVED 2026-03-10):**
+- Auth fully implemented: magic-link flow (`/auth`), PIN login (home page keypad), child account setup (`/setup`), middleware at `src/lib/supabase/middleware.ts`, `BridgeLayout` auth gate. Dev bypass via `NEXT_PUBLIC_DEV_SKIP_AUTH`.
 
 **Missing Energy System Implementation:**
 - Issue: Energy displays as UI statistic but has no mechanics. No deduction on activity, no recovery schedule, no refill shop
@@ -103,9 +89,10 @@
   2. Validate all env vars exist at app startup
   3. Consider encrypting sensitive config (future: OpenAI key, parent payment API)
 
-**No Rate Limiting on Planned Server Actions:**
-- Risk: Once `awardLoot()`, `spendEnergy()` are implemented, malicious client could spam requests
-- Impact: Gold inflation, energy bypass, XP farming
+**No Rate Limiting on Server Actions:**
+- Risk: `awardLoot()`, `spendEnergy()` are now implemented but have no rate limiting — client could spam requests
+- Mitigation in place: `awardLoot` uses idempotent quest_id check for daily claims; amounts are server-side constants
+- Impact: Gold inflation still possible via repeated mission completions without rate limiting
 - Fix approach:
   1. Implement Supabase Rate Limiting Extension or custom middleware
   2. Add transaction-level conflict detection (e.g., two simultaneous awardLoot calls)
@@ -168,10 +155,10 @@
 
 ## Missing Critical Features
 
-**No Quest Progression Mechanic:**
-- Problem: QuestCard shows progress: 65 for "Fraction Fortress" but clicking buttons does nothing
-- Blocks: Cannot start quests, cannot save progress, cannot submit completions
-- Required before: Real gameplay loop, earning rewards, leveling up
+**~~No Quest Progression Mechanic~~ (PARTIALLY RESOLVED 2026-03-12):**
+- Mission Mode provides structured quest flow: briefing board → AI chat → stat updates → completion overlay → reward collection
+- MissionCompleteOverlay calls `awardLoot()` on completion
+- Still needed: QuestCard progress tracking for non-mission quests, quest save/resume
 
 **No Multiplayer / Social Features:**
 - Problem: CLAUDE.md mentions "gamified learning" but no mentions of leaderboards, friends, shared quests
@@ -195,16 +182,10 @@
 
 ## Test Coverage Gaps
 
-**No Tests Detected Anywhere:**
-- What's not tested: Zero test files found (no .test.ts/.test.tsx/.spec.ts)
-- Files: Entire `src/` directory
-- Risk:
-  - Agent color conversions unvalidated
-  - XP progress calculations never tested (milestone logic at 25/50/75/100%)
-  - RLS policies never verified
-  - Server Actions (when implemented) have no happy/sad path tests
-  - Auth flow never tested
-- Priority: High — Critical for "Loot Guard" security before any real transactions
+**~~No Tests Detected Anywhere~~ (PARTIALLY RESOLVED 2026-03-11):**
+- Vitest configured with unit test stubs in `src/__tests__/` (auth, dashboard)
+- Playwright E2E test at `tests/e2e/bridge-lab.spec.py`
+- Still needed: economy action tests, component integration tests, RLS policy tests
 
 **Database Migration Not Tested:**
 - Risk: Triggers `handle_updated_at()` and `handle_new_user()` never executed in test
@@ -218,4 +199,4 @@
 
 ---
 
-*Concerns audit: 2026-03-10*
+*Concerns audit: 2026-03-10 (updated 2026-03-12 — marked resolved items, updated for Phase 2.6/2.7 work)*

@@ -52,6 +52,18 @@ export function BridgeSidebar({ trainingCertified = false }: BridgeSidebarProps)
           <span className="hidden md:inline">CERTIFIED</span>
         </div>
       )}
+
+      {/* Help button — revisit training room */}
+      <Link
+        href="/bridge/missions/training"
+        className={`${trainingCertified ? "mt-2" : "mt-auto"} flex w-full items-center justify-center
+                   gap-1 rounded-xl border border-white/15 px-2 py-2 text-[10px] font-bold
+                   text-[#A8977E] transition-all hover:border-white/30 hover:text-[#F0E6D3]`}
+        title="Training Room"
+      >
+        <span>?</span>
+        <span className="hidden md:inline uppercase tracking-wider">HELP</span>
+      </Link>
     </aside>
   );
 }
