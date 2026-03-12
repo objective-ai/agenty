@@ -9,14 +9,29 @@ export function StartQuestButton() {
 
   return (
     <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{
+        opacity: 1,
+        scale: 1,
         boxShadow: [
           `0 0 12px ${agent.color}44`,
           `0 0 24px ${agent.color}88`,
           `0 0 12px ${agent.color}44`,
         ],
       }}
-      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      transition={{
+        opacity: { duration: 0.4, ease: "easeOut" },
+        scale: { duration: 0.4, ease: "easeOut" },
+        boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+      }}
+      whileTap={{
+        scale: 0.95,
+        boxShadow: `0 0 20px rgba(var(--agent-accent-rgb), 0.6)`,
+      }}
+      whileHover={{
+        scale: 1.02,
+        boxShadow: `0 0 16px rgba(var(--agent-accent-rgb), 0.4)`,
+      }}
       className="rounded-2xl"
     >
       <Link
