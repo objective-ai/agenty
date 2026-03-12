@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2.5: Intelligence Core** (INSERTED) - Claude AI chat, vector embeddings, PDF upload + RAG, Mission Mode with briefing board
 - [x] **Phase 2.6: Command Deck — Mission Factory** (INSERTED) - Parent-facing mission generation with AI, template system, validation, CRUD, and 3 new missions
 - [x] **Phase 2.7: Economy & Live Dashboard** (INSERTED) - Economy server actions (Loot Guard), dashboard components, mission completion overlay, calculator widget, CommsPanel v2
-- [x] **Phase 3: Expanded Reward Loop** - Wire dashboard to live Supabase data, rank titles, shields/damaged mode, 4 new Command Deck inputs, AI mission banners via Gemini
+- [ ] **Phase 3: Expanded Reward Loop** - Wire dashboard to live Supabase data, rank titles, shields/damaged mode, 4 new Command Deck inputs, AI mission banners via Gemini
 - [ ] **Phase 4: Animation Polish** - Page transitions, iPad touch targets, and haptic-style tap feedback across every interactive element
 
 ## Phase Details
@@ -91,7 +91,7 @@ Plans:
   4. Command Deck adds 4 new inputs: problem count (3/5/10), difficulty (Easy/Medium/Hard), narrative theme (Space/Nature/History/Fantasy), time estimate (Short/Medium/Long)
   5. Mission generation produces the correct number of stats matching problemCount and adjusts difficulty accordingly
   6. Each generated mission includes an AI-generated banner image (Gemini); missing API key degrades gracefully (no banner, no error)
-**Plans**: 5 plans
+**Plans**: 7 plans
 
 Plans:
 - [x] 03-01-PLAN.md — Server Actions (getProfile, getRecentLoot), EconomyContext expansion, rank titles
@@ -99,6 +99,8 @@ Plans:
 - [x] 03-03-PLAN.md — Shields mechanic (missionReducer, reportWrongAnswer tool, Damaged Mode visuals)
 - [x] 03-04-PLAN.md — Command Deck upgrades (4 new inputs, validator relaxation)
 - [x] 03-05-PLAN.md — AI mission banners (Gemini integration, Supabase Storage, banner display)
+- [ ] 03-06-PLAN.md — Gap closure: confetti particle burst in MissionCompleteOverlay (ECON-05)
+- [ ] 03-07-PLAN.md — Gap closure: REQUIREMENTS.md accuracy + SUMMARY corrections (QUEST-01, QUEST-02)
 
 ### Phase 2.5: Intelligence Core (INSERTED)
 **Goal**: Claude AI streaming chat works with agent personas, PDFs can be uploaded and queried via RAG, and Mission Mode provides a structured learning flow with real-time stat tracking.
@@ -135,5 +137,5 @@ Phases execute in numeric order: 1 → 2 → 2.5 → 2.6 → 2.7 → 3 → 4
 | 2.5. Intelligence Core | manual | Complete | 2026-03-12 |
 | 2.6. Command Deck | manual | Complete | 2026-03-12 |
 | 2.7. Economy & Dashboard | manual | Complete | 2026-03-12 |
-| 3. Reward Loop | 5/5 | Complete | 2026-03-12 |
+| 3. Reward Loop | 5/7 | Gap closure | 2026-03-12 |
 | 4. Animation Polish | 0/TBD | Not started | - |
