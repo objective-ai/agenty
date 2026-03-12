@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2.5: Intelligence Core** (INSERTED) - Claude AI chat, vector embeddings, PDF upload + RAG, Mission Mode with briefing board
 - [x] **Phase 2.6: Command Deck — Mission Factory** (INSERTED) - Parent-facing mission generation with AI, template system, validation, CRUD, and 3 new missions
 - [x] **Phase 2.7: Economy & Live Dashboard** (INSERTED) - Economy server actions (Loot Guard), dashboard components, mission completion overlay, calculator widget, CommsPanel v2
-- [ ] **Phase 3: Expanded Reward Loop** - Wire dashboard to live Supabase data, rank titles, shields/damaged mode, 4 new Command Deck inputs, AI mission banners via Gemini
+- [x] **Phase 3: Expanded Reward Loop** - Wire dashboard to live Supabase data, rank titles, shields/damaged mode, 4 new Command Deck inputs, AI mission banners via Gemini (completed 2026-03-12)
 - [ ] **Phase 4: Animation Polish** - Page transitions, iPad touch targets, and haptic-style tap feedback across every interactive element
 
 ## Phase Details
@@ -137,5 +137,5 @@ Phases execute in numeric order: 1 → 2 → 2.5 → 2.6 → 2.7 → 3 → 4
 | 2.5. Intelligence Core | manual | Complete | 2026-03-12 |
 | 2.6. Command Deck | manual | Complete | 2026-03-12 |
 | 2.7. Economy & Dashboard | manual | Complete | 2026-03-12 |
-| 3. Reward Loop | 6/7 | In Progress|  |
+| 3. Reward Loop | 7/7 | Complete   | 2026-03-12 |
 | 4. Animation Polish | 0/TBD | Not started | - |
