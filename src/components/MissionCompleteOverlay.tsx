@@ -119,7 +119,7 @@ export function MissionCompleteOverlay({
           return;
         }
       }
-      if (result.data) {
+      if (result.success) {
         setAwarded(result.data);
       }
       dispatch({ type: "COLLECT_REWARDS" });
