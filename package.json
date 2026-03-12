@@ -6,11 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "pretest:e2e": "node -e \"if(!process.env.NEXT_PUBLIC_DEV_SKIP_AUTH) { console.warn('\\x1b[33mWARN: NEXT_PUBLIC_DEV_SKIP_AUTH not set — tests will fail unless you are logged in.\\x1b[0m') }\"",
+    "test:e2e": "python tests/e2e/bridge-lab.spec.py"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.58",
     "@ai-sdk/react": "^3.0.118",
+    "@google/genai": "^1.44.0",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.99.0",
     "ai": "^6.0.116",

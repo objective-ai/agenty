@@ -1,10 +1,11 @@
 // src/components/MissionModeShell.tsx
 "use client";
 
-import { useReducer } from "react";
+import { useReducer, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import type { MissionConfig } from "@/lib/missions/registry";
 import { missionReducer, initialState } from "@/lib/missions/missionReducer";
+import { spendEnergy } from "@/lib/actions/economy";
 import { MissionBriefingBoard } from "./MissionBriefingBoard";
 import { CommsPanel } from "./CommsPanel";
 import { IntelDrawer } from "./IntelDrawer";
@@ -16,6 +17,16 @@ type MissionModeShellProps = {
 
 export function MissionModeShell({ config }: MissionModeShellProps) {
   const [state, dispatch] = useReducer(missionReducer, initialState(config));
+  const energySpentRef = useRef(false);
+
+  // ECON-02: Spend energy when mission starts (fire-and-forget, no crash on failure)
+  useEffect(() => {
+    if (energySpentRef.current) return;
+    energySpentRef.current = true;
+    spendEnergy(10, "mission_start").catch((err) =>
+      console.warn("[MissionModeShell] spendEnergy failed:", err)
+    );
+  }, []);
 
   const intelButtonDisabled =
     (config.isCritical ?? false) && state.status === "active";

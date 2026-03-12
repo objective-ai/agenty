@@ -7,7 +7,9 @@
 import { anthropic } from "@ai-sdk/anthropic";
 import { generateObject } from "ai";
 import { z } from "zod";
+import { GoogleGenAI } from "@google/genai";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { getTemplateById } from "@/lib/missions/templates";
 import {
   validateMission,
@@ -16,6 +18,63 @@ import {
 import type { NextRequest } from "next/server";
 
 export const maxDuration = 60; // generation can take a moment
+
+// ── Banner generation (Gemini) ───────────────────────────────────
+
+async function generateBanner(
+  title: string,
+  topic: string,
+  theme: string
+): Promise<string | null> {
+  const apiKey = process.env.GOOGLE_AI_API_KEY;
+  if (!apiKey) {
+    console.warn("[Banner] GOOGLE_AI_API_KEY not set -- skipping banner generation");
+    return null;
+  }
+  try {
+    const ai = new GoogleGenAI({ apiKey });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash-preview-image-generation",
+      contents: `Dramatic cinematic illustration for a children's educational mission titled '${title}' about ${topic}, ${theme} setting, digital art, dark navy teal palette, no text.`,
+      config: {
+        responseModalities: ["IMAGE"],
+        imageConfig: { aspectRatio: "16:9" },
+      },
+    });
+
+    const imagePart = response.candidates?.[0]?.content?.parts?.find(
+      (p: { inlineData?: unknown }) => p.inlineData
+    );
+    if (
+      !imagePart ||
+      !("inlineData" in imagePart) ||
+      !imagePart.inlineData?.data
+    ) {
+      return null;
+    }
+
+    const buffer = Buffer.from(imagePart.inlineData.data, "base64");
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.png`;
+
+    const { error } = await supabaseAdmin.storage
+      .from("mission-banners")
+      .upload(filename, buffer, { contentType: "image/png", upsert: false });
+
+    if (error) {
+      console.warn("[Banner] Storage upload failed:", error.message);
+      return null;
+    }
+
+    const { data: urlData } = supabaseAdmin.storage
+      .from("mission-banners")
+      .getPublicUrl(filename);
+
+    return urlData.publicUrl;
+  } catch (err) {
+    console.warn("[Banner] Generation failed:", err);
+    return null;
+  }
+}
 
 // ── Input schema ──────────────────────────────────────────────────
 
@@ -205,6 +264,13 @@ Call the createMission tool with your result.`;
     const validation = validateMission(generated, template, gradeLevel, problemCount);
 
     if (validation.valid) {
+      // Generate banner image (non-blocking: failure returns null, mission still saves)
+      const bannerUrl = await generateBanner(
+        generated.title,
+        topic,
+        narrativeTheme ?? "space"
+      );
+
       return Response.json({
         mission: {
           ...generated,
@@ -216,6 +282,7 @@ Call the createMission tool with your result.`;
           difficulty,
           narrativeTheme,
           timeEstimate,
+          bannerUrl,
         },
       });
     }
