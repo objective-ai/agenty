@@ -26,13 +26,18 @@ export function HudStatusRail() {
         style={{ borderBottomColor: `${agent.color}33` }}
       >
         {/* Mini Agent Holographic Portrait -- tappable for switch (Comms Patch) */}
-        <button
+        <motion.button
           onClick={() => setSwitchOpen(true)}
-          className="transition-all duration-200 hover:scale-105"
+          className="min-w-[44px] min-h-[44px] flex items-center justify-center"
           aria-label={`Switch agent (currently ${agent.name})`}
+          whileTap={{
+            scale: 0.95,
+            boxShadow: `0 0 20px rgba(var(--agent-accent-rgb), 0.6)`,
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
           <HolographicAvatar agent={agent} size={40} />
-        </button>
+        </motion.button>
 
         {/* XP Bar -- center */}
         <div className="flex flex-1 flex-col gap-1">
