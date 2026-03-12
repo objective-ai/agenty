@@ -15,6 +15,16 @@ import { HudStatusRail } from "@/components/HudStatusRail";
 // Comms Patch: 1st-person tactical voice (Cooper mission-controller tone).
 // ═══════════════════════════════════════════════════════════════════
 
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+};
+
+const staggerChild = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+};
+
 const STATIONS = [
   {
     id: "energy",
@@ -134,14 +144,14 @@ export default function TrainingPage() {
         </div>
 
         {/* Calibration Stations */}
-        <div className="flex flex-col gap-4">
+        <motion.div className="flex flex-col gap-4" initial="hidden" animate="visible" variants={staggerContainer}>
           {STATIONS.map((station, index) => {
             const done = completedStations.has(station.id);
             const isActive = activeStation === index;
 
             return (
+              <motion.div key={station.id} variants={staggerChild}>
               <motion.div
-                key={station.id}
                 className="overflow-hidden rounded-2xl border-2 bg-[#0A1423]"
                 style={{
                   borderColor: done
@@ -153,9 +163,14 @@ export default function TrainingPage() {
                 animate={done ? { boxShadow: `0 0 16px ${agent.color}33` } : {}}
               >
                 {/* Station header -- always visible, tappable */}
-                <button
+                <motion.button
                   className="flex w-full items-center gap-4 p-5 text-left"
                   onClick={() => handleStationActivate(index)}
+                  whileTap={{
+                    scale: 0.95,
+                    boxShadow: `0 0 20px rgba(var(--agent-accent-rgb), 0.6)`,
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <motion.span
                     className={`text-3xl ${isActive || done ? station.visualClass : ""}`}
@@ -176,7 +191,7 @@ export default function TrainingPage() {
                   >
                     {done ? "CALIBRATED \u2713" : "TAP TO OPEN"}
                   </span>
-                </button>
+                </motion.button>
 
                 {/* Expanded station content */}
                 <AnimatePresence>
@@ -230,9 +245,10 @@ export default function TrainingPage() {
                   )}
                 </AnimatePresence>
               </motion.div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Complete Training CTA */}
         <div className="mt-8">
@@ -258,14 +274,22 @@ export default function TrainingPage() {
               onClick={handleComplete}
               disabled={isPending || !allStationsCompleted}
               className="w-full rounded-2xl border-2 font-black uppercase tracking-wider
-                         text-[#050B14] transition-all duration-200 disabled:opacity-40"
+                         text-[#050B14] disabled:opacity-40"
               style={{
                 minHeight: 64,
                 backgroundColor: allStationsCompleted ? agent.color : "#A8977E",
                 borderColor: allStationsCompleted ? agent.color : "#A8977E",
                 boxShadow: allStationsCompleted ? `0 0 20px ${agent.color}66` : "none",
               }}
-              whileTap={{ scale: 0.97 }}
+              whileTap={{
+                scale: 0.95,
+                boxShadow: `0 0 20px rgba(var(--agent-accent-rgb), 0.6)`,
+              }}
+              whileHover={{
+                scale: 1.02,
+                boxShadow: `0 0 12px rgba(var(--agent-accent-rgb), 0.3)`,
+              }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
               {isPending
                 ? "PROCESSING..."
