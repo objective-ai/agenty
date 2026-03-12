@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect, useCallback, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 import { loginWithPin, sendMagicLink } from "@/lib/actions/auth";
 
 // ─── Cooper Holographic Avatar ──────────────────────────────────
@@ -87,23 +88,27 @@ function KeyButton({
   disabled?: boolean;
 }) {
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onPress}
       disabled={disabled}
       className={`
         flex items-center justify-center rounded-2xl border-2
         border-white/10 bg-[#0A1423] text-xl font-bold
-        text-[#F0E6D3] shadow-lg transition-all duration-150
+        text-[#F0E6D3] shadow-lg
         hover:border-[#3B82F6]/40 hover:shadow-[0_0_16px_rgba(59,130,246,0.2)]
-        active:scale-95 active:bg-[#142743]
         disabled:opacity-30 disabled:cursor-not-allowed
         ${wide ? "col-span-1" : ""}
         min-h-[64px] min-w-[64px]
       `}
+      whileTap={{
+        scale: 0.95,
+        boxShadow: "0 0 20px rgba(59, 130, 246, 0.6)",
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
     >
       {label}
-    </button>
+    </motion.button>
   );
 }
 
