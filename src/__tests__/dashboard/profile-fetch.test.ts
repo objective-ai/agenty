@@ -115,6 +115,23 @@ describe("DASH-02: Profile Fetch", () => {
     expect(mockClient.from).toHaveBeenCalledWith("profiles");
   });
 
+  it("redirects to /parent when role is parent", async () => {
+    mockClient.auth.getUser.mockResolvedValue({
+      data: { user: { id: "user-789" } },
+    });
+
+    const fromChain = {
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: { role: "parent" } }),
+    };
+    mockClient.from.mockReturnValue(fromChain);
+
+    await PlayLayout({ children: null as unknown as React.ReactNode });
+
+    expect(mockRedirect).toHaveBeenCalledWith("/parent");
+  });
+
   it("has no 'use client' directive (must be Server Component)", async () => {
     // Read the actual file and check for 'use client'
     const fs = await import("fs");
