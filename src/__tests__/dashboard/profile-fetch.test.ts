@@ -16,6 +16,10 @@ const { mockClient, mockRedirect } = vi.hoisted(() => {
 // ─── Module mocks ─────────────────────────────────────────────────
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(() => mockClient),
+  getAuthUser: vi.fn(async (supabase: { auth: { getUser: () => Promise<{ data: { user: unknown } }> } }) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    return user;
+  }),
 }));
 
 vi.mock("next/navigation", () => ({
