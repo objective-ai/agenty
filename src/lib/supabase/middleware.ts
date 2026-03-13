@@ -5,9 +5,10 @@ import { NextResponse, type NextRequest } from "next/server";
  * Refreshes the Supabase auth session on every request and
  * enforces route-level protection:
  *
- *  - /bridge/* without a session  -> redirect to /
- *  - /           with a session   -> redirect to /bridge
- *  - /setup      always allowed   (parent lands here after magic link)
+ *  - /play/*   without a session  -> redirect to /
+ *  - /parent/* without a session  -> redirect to /
+ *  - /         with a session     -> redirect to /play (layout handles parent→/parent)
+ *  - /setup    always allowed     (parent lands here after magic link)
  */
 export async function updateSession(request: NextRequest) {
   const supabaseResponse = NextResponse.next({ request });
@@ -59,17 +60,19 @@ export async function updateSession(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  // Route protection: unauthenticated users cannot access /bridge
-  if (!user && pathname.startsWith("/bridge")) {
+  // Route protection: unauthenticated users cannot access /play or /parent
+  if (!user && (pathname.startsWith("/play") || pathname.startsWith("/parent"))) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     return NextResponse.redirect(url);
   }
 
-  // Convenience redirect: authenticated users on / go to /bridge
+  // Convenience redirect: authenticated users landing on / go to /play.
+  // Role-based split (student vs parent) happens inside each portal layout.
+  // If a parent hits /play their layout will redirect them to /parent.
   if (user && pathname === "/") {
     const url = request.nextUrl.clone();
-    url.pathname = "/bridge";
+    url.pathname = "/play";
     return NextResponse.redirect(url);
   }
 

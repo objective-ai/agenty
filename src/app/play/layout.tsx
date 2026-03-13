@@ -25,9 +25,14 @@ export default async function BridgeLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("gold, xp, energy, level, streak_days, agent_id, display_name, training_certified")
+    .select("gold, xp, energy, level, streak_days, agent_id, display_name, training_certified, role")
     .eq("id", user.id)
     .single();
+
+  // Parents cannot access the student portal
+  if (profile?.role === "parent") {
+    return redirect("/parent");
+  }
 
   return (
     <AgentProvider initialAgent={(profile?.agent_id as AgentId) ?? "cooper"}>

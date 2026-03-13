@@ -256,13 +256,13 @@ export default function SetupPage() {
           {/* Go to Login */}
           <button
             type="button"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/parent")}
             className="w-full rounded-xl border-2 border-[#3B82F6]/30 bg-[#3B82F6] px-6 py-3
                        text-sm font-bold text-white shadow-lg
                        hover:bg-[#2563EB] hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]
                        transition-all duration-150 mt-2"
           >
-            Go to Login
+            Go to Parent Dashboard
           </button>
         </div>
       )}
