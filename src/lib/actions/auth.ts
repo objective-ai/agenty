@@ -89,6 +89,17 @@ export async function setupChildAccount(
     return { error: profileError.message };
   }
 
+  // Update parent's own role to 'parent' (idempotent)
+  const { error: roleError } = await supabaseAdmin
+    .from("profiles")
+    .update({ role: "parent" })
+    .eq("id", parent.id);
+
+  if (roleError) {
+    console.error("Failed to set parent role:", roleError.message);
+    // Non-blocking: child account was created successfully; role update is best-effort
+  }
+
   return { success: true, kidEmail };
 }
 
