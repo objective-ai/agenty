@@ -76,12 +76,12 @@ describe("DASH-01: AgentSwitchOverlay component module", () => {
 });
 
 // ── Bridge Page Wiring Tests ───────────────────────────────────
-describe("DASH-01: Bridge page AgentPicker wiring", () => {
+describe("DASH-01: Play page AgentPicker wiring", () => {
   let bridgeSource: string;
 
   beforeEach(() => {
     bridgeSource = readFileSync(
-      resolve(__dirname, "../../app/bridge/page.tsx"),
+      resolve(__dirname, "../../app/play/page.tsx"),
       "utf-8"
     );
   });

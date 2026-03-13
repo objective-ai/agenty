@@ -32,7 +32,7 @@ vi.mock("@/contexts/EconomyContext", () => ({
 }));
 
 // ─── Import SUT after mocks ──────────────────────────────────────
-import BridgeLayout from "@/app/bridge/layout";
+import PlayLayout from "@/app/play/layout";
 
 describe("DASH-02: Profile Fetch", () => {
   beforeEach(() => {
@@ -61,7 +61,7 @@ describe("DASH-02: Profile Fetch", () => {
     mockClient.from.mockReturnValue(fromChain);
 
     // Should not throw, should call .from("profiles").select with required fields
-    await BridgeLayout({ children: null as unknown as React.ReactNode });
+    await PlayLayout({ children: null as unknown as React.ReactNode });
 
     expect(mockClient.from).toHaveBeenCalledWith("profiles");
     expect(fromChain.select).toHaveBeenCalledWith(
@@ -84,7 +84,7 @@ describe("DASH-02: Profile Fetch", () => {
       data: { user: null },
     });
 
-    await BridgeLayout({ children: null as unknown as React.ReactNode });
+    await PlayLayout({ children: null as unknown as React.ReactNode });
 
     expect(mockRedirect).toHaveBeenCalledWith("/");
     // Should NOT call .from() when user is null
@@ -106,7 +106,7 @@ describe("DASH-02: Profile Fetch", () => {
     // Should not throw even with null profile — defaults will be used
     // The layout passes defaults to providers, which we test indirectly:
     // If the function completes without error, defaults were applied
-    await BridgeLayout({ children: null as unknown as React.ReactNode });
+    await PlayLayout({ children: null as unknown as React.ReactNode });
 
     expect(mockClient.from).toHaveBeenCalledWith("profiles");
   });
@@ -117,7 +117,7 @@ describe("DASH-02: Profile Fetch", () => {
     const path = await import("path");
     const layoutPath = path.resolve(
       __dirname,
-      "../../app/bridge/layout.tsx"
+      "../../app/play/layout.tsx"
     );
     const content = fs.readFileSync(layoutPath, "utf-8");
     expect(content).not.toContain("use client");
