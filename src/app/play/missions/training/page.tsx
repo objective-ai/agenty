@@ -113,7 +113,7 @@ export default function TrainingPage() {
               href="/play"
               className="text-xs uppercase tracking-[0.3em] text-[#A8977E] transition-colors hover:text-[#F0E6D3]"
             >
-              ← BRIDGE
+              ← HOME
             </Link>
             <span className="text-xs text-[#A8977E]/40">/</span>
             <p className="text-xs uppercase tracking-[0.3em] text-[#A8977E]">
@@ -266,7 +266,7 @@ export default function TrainingPage() {
                            bg-[#10B981]/20 px-6 py-3 text-sm font-bold uppercase tracking-wider
                            text-[#10B981] transition-all hover:bg-[#10B981]/30"
               >
-                RETURN TO BRIDGE →
+                RETURN TO HOME →
               </Link>
             </motion.div>
           ) : (

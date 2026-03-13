@@ -53,7 +53,7 @@ export function MissionBoardGrid({ missions }: { missions: MissionConfig[] }) {
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
           <Link
-            href={`/bridge/lab?mission=${m.id}`}
+            href={`/play/lab?mission=${m.id}`}
             className="flex h-28 flex-col items-center justify-center rounded-2xl border-2
                        border-[#3B82F644] bg-[#0A1423]"
           >

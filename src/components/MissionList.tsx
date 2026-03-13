@@ -103,7 +103,7 @@ export function MissionList({
                 {mission.status === "active" && (
                   <>
                     <a
-                      href={`/bridge/lab?mission=${mission.slug}`}
+                      href={`/play/lab?mission=${mission.slug}`}
                       className="rounded border border-[#3B82F644] px-3 py-1 font-mono text-[10px] font-bold text-[#3B82F6] transition-colors hover:border-[#3B82F6] hover:bg-[#3B82F610]"
                     >
                       PLAY
