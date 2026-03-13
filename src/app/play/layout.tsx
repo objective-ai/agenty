@@ -6,12 +6,12 @@ import { PageTransition } from "@/components/PageTransition";
 import type { AgentId } from "@/contexts/AgentContext";
 
 // ═══════════════════════════════════════════════════════════════════
-// /bridge layout — Server Component
+// /play layout — Server Component
 // Fetches profile once per request; hydrates EconomyContext + AgentContext.
 // Server-only — no client directive. This IS the server fetch boundary.
 // ═══════════════════════════════════════════════════════════════════
 
-export default async function BridgeLayout({
+export default async function PlayLayout({
   children,
 }: {
   children: React.ReactNode;
