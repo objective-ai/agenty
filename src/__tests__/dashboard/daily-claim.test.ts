@@ -19,9 +19,9 @@ describe("DASH-04: Daily Claim", () => {
     expect(content).toMatch(/export\s+function\s+DailyClaim/);
   });
 
-  it("calls awardLoot(25, 'daily_bonus') on button click", () => {
+  it("calls claimDaily() server action on button click (Loot Guard)", () => {
     const content = readFileSync(filePath, "utf-8");
-    expect(content).toContain('awardLoot(25, "daily_bonus")');
+    expect(content).toContain("claimDaily");
   });
 
   it("uses useTransition for non-blocking Server Action calls", () => {
