@@ -6,9 +6,9 @@ import { motion } from "motion/react";
 
 // Route depth map for transition direction
 function getDepth(path: string): number {
-  if (path === "/bridge") return 0;
-  const segments = path.replace("/bridge/", "").split("/").filter(Boolean);
-  // /bridge/lab is depth 2 (mission mode = deeper)
+  if (path === "/play") return 0;
+  const segments = path.replace("/play/", "").split("/").filter(Boolean);
+  // /play/lab is depth 2 (mission mode = deeper)
   if (segments[0] === "lab") return 2;
   return segments.length;
 }

@@ -287,7 +287,7 @@ export function MissionCompleteOverlay({
 
         {rewardsCollected && (
           <motion.button
-            onClick={() => router.push("/bridge")}
+            onClick={() => router.push("/play")}
             className="w-full rounded-xl border-2 py-3 font-mono text-sm font-black uppercase tracking-widest"
             style={{
               borderColor: "#3B82F6",

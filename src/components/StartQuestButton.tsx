@@ -35,7 +35,7 @@ export function StartQuestButton() {
       className="rounded-2xl"
     >
       <Link
-        href="/bridge/missions/training"
+        href="/play/missions/training"
         className="flex w-full items-center justify-center rounded-2xl border-2 font-black
                    uppercase tracking-wider transition-all duration-200"
         style={{

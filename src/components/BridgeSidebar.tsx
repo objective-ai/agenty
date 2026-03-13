@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import { useAgent } from "@/contexts/AgentContext";
 
 const NAV_ITEMS = [
-  { href: "/bridge/missions", label: "MISSIONS", emoji: "\u{1F3AF}" },
-  { href: "/bridge/inventory", label: "INVENTORY", emoji: "\u{1F392}" },
-  { href: "/bridge/lab", label: "THE LAB", emoji: "\u{1F52C}" },
+  { href: "/play/missions", label: "MISSIONS", emoji: "\u{1F3AF}" },
+  { href: "/play/inventory", label: "INVENTORY", emoji: "\u{1F392}" },
+  { href: "/play/lab", label: "THE LAB", emoji: "\u{1F52C}" },
 ] as const;
 
 interface BridgeSidebarProps {
@@ -55,7 +55,7 @@ export function BridgeSidebar({ trainingCertified = false }: BridgeSidebarProps)
 
       {/* Help button — revisit training room */}
       <Link
-        href="/bridge/missions/training"
+        href="/play/missions/training"
         className={`${trainingCertified ? "mt-2" : "mt-auto"} flex w-full items-center justify-center
                    gap-1 rounded-xl border border-white/15 px-2 py-2 text-[10px] font-bold
                    text-[#A8977E] transition-all hover:border-white/30 hover:text-[#F0E6D3]`}

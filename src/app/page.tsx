@@ -302,7 +302,7 @@ export default function LoginPage() {
       setIsLoading(false);
 
       if (result.success) {
-        startTransition(() => router.push("/bridge"));
+        startTransition(() => router.push("/play"));
         return;
       }
 

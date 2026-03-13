@@ -110,7 +110,7 @@ export default function TrainingPage() {
         <div className="mb-8">
           <div className="mb-1 flex items-center gap-3">
             <Link
-              href="/bridge"
+              href="/play"
               className="text-xs uppercase tracking-[0.3em] text-[#A8977E] transition-colors hover:text-[#F0E6D3]"
             >
               ← BRIDGE
@@ -261,7 +261,7 @@ export default function TrainingPage() {
               <p className="text-xl font-black text-[#F0E6D3]">TRAINING CERTIFIED</p>
               <p className="mt-1 text-sm text-[#10B981]">+50 Gold awarded. Badge unlocked.</p>
               <Link
-                href="/bridge"
+                href="/play"
                 className="mt-4 inline-flex items-center gap-2 rounded-xl border-2 border-[#10B981]
                            bg-[#10B981]/20 px-6 py-3 text-sm font-bold uppercase tracking-wider
                            text-[#10B981] transition-all hover:bg-[#10B981]/30"

@@ -101,7 +101,7 @@ export default async function MissionsPage() {
         <div className="flex w-full max-w-2xl flex-col gap-3">
           {/* START TRAINING — primary CTA */}
           <Link
-            href="/bridge/missions/training"
+            href="/play/missions/training"
             className="flex w-full items-center justify-center rounded-2xl border-2
                        font-black uppercase tracking-wider text-[#050B14] transition-all duration-200
                        hover:opacity-90"
@@ -117,7 +117,7 @@ export default async function MissionsPage() {
 
           {/* RETURN TO BASE — secondary nav so kid never feels stuck */}
           <Link
-            href="/bridge"
+            href="/play"
             className="flex w-full items-center justify-center rounded-2xl border-2
                        border-white/10 font-bold uppercase tracking-wider text-[#A8977E]
                        transition-all duration-200 hover:border-white/20 hover:text-[#F0E6D3]"
