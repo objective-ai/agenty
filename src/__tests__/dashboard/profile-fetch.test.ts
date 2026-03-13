@@ -20,6 +20,11 @@ vi.mock("@/lib/supabase/server", () => ({
     const { data: { user } } = await supabase.auth.getUser();
     return user;
   }),
+  isDevMode: vi.fn(() => false),
+}));
+
+vi.mock("@/lib/supabase/admin", () => ({
+  supabaseAdmin: {},
 }));
 
 vi.mock("next/navigation", () => ({

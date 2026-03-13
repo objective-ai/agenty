@@ -1,17 +1,26 @@
 "use client";
 
-import { useTransition, useState } from "react";
+import { useTransition, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { claimDaily } from "@/lib/actions/economy";
+import { claimDaily, isDailyClaimed } from "@/lib/actions/economy";
 import { useEconomy } from "@/contexts/EconomyContext";
 import { useAgent } from "@/contexts/AgentContext";
 
 export function DailyClaim() {
-  const { gold, setGold } = useEconomy();
+  const { setGold } = useEconomy();
   const { agent } = useAgent();
   const [isPending, startTransition] = useTransition();
   const [claimed, setClaimed] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Check if today's daily was already claimed on mount
+  useEffect(() => {
+    isDailyClaimed().then((alreadyClaimed) => {
+      if (alreadyClaimed) setClaimed(true);
+      setLoading(false);
+    });
+  }, []);
 
   function handleClaim() {
     if (isPending || claimed) return;
@@ -30,6 +39,12 @@ export function DailyClaim() {
         }
       }
     });
+  }
+
+  if (loading) {
+    return (
+      <div className="h-16 animate-pulse rounded-2xl border-2 border-white/10 bg-[#0A1423]" />
+    );
   }
 
   return (

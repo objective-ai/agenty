@@ -49,7 +49,7 @@ import os
 from playwright.sync_api import sync_playwright, expect
 
 BASE_URL = "http://localhost:3000"
-LAB_URL = f"{BASE_URL}/play/lab"
+LAB_URL = f"{BASE_URL}/play/missions/dragon-bridge"
 SCREENSHOT_DIR = "tests/e2e/screenshots"
 
 

@@ -8,8 +8,8 @@ import { motion } from "motion/react";
 function getDepth(path: string): number {
   if (path === "/play") return 0;
   const segments = path.replace("/play/", "").split("/").filter(Boolean);
-  // /play/lab is depth 2 (mission mode = deeper)
-  if (segments[0] === "lab") return 2;
+  // /play/missions/[id] is depth 2 (mission mode = deeper)
+  if (segments[0] === "missions" && segments.length === 2 && segments[1] !== "training") return 2;
   return segments.length;
 }
 

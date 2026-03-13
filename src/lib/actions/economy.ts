@@ -177,6 +177,26 @@ export async function getProfile(): Promise<ActionResult<ProfileData>> {
 }
 
 /**
+ * Check if today's daily reward has already been claimed.
+ */
+export async function isDailyClaimed(): Promise<boolean> {
+  const userId = await getAuthenticatedUserId();
+  if (!userId) return false;
+
+  const today = new Date().toISOString().slice(0, 10);
+  const questId = `daily_claim_${today}`;
+
+  const { data } = await supabaseAdmin
+    .from("loot_ledger")
+    .select("id")
+    .eq("profile_id", userId)
+    .contains("metadata", { quest_id: questId })
+    .limit(1);
+
+  return (data?.length ?? 0) > 0;
+}
+
+/**
  * Fetch recent loot ledger entries for the authenticated user.
  */
 export async function getRecentLoot(

@@ -1,4 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, isDevMode } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import { AgentPicker } from "@/components/AgentPicker";
 import { HudStatusRail } from "@/components/HudStatusRail";
@@ -21,7 +22,9 @@ export default async function BridgePage() {
 
   if (!user) redirect("/");
 
-  const { data: profile } = await supabase
+  // In dev mode, use admin client to bypass RLS (no real auth session).
+  const db = isDevMode() ? supabaseAdmin : supabase;
+  const { data: profile } = await db
     .from("profiles")
     .select("agent_id, training_certified")
     .eq("id", user.id)

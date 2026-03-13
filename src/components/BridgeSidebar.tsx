@@ -7,7 +7,6 @@ import { useAgent } from "@/contexts/AgentContext";
 const NAV_ITEMS = [
   { href: "/play/missions", label: "MISSIONS", emoji: "\u{1F3AF}" },
   { href: "/play/inventory", label: "INVENTORY", emoji: "\u{1F392}" },
-  { href: "/play/lab", label: "THE LAB", emoji: "\u{1F52C}" },
 ] as const;
 
 interface BridgeSidebarProps {

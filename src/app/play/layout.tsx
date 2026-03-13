@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
-import { createClient, getAuthUser } from "@/lib/supabase/server";
+import { createClient, getAuthUser, isDevMode } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { AgentProvider } from "@/contexts/AgentContext";
 import { EconomyProvider } from "@/contexts/EconomyContext";
 import { PageTransition } from "@/components/PageTransition";
@@ -23,7 +24,9 @@ export default async function PlayLayout({
     return redirect("/");
   }
 
-  const { data: profile } = await supabase
+  // In dev mode, use admin client to bypass RLS (no real auth session).
+  const db = isDevMode() ? supabaseAdmin : supabase;
+  const { data: profile } = await db
     .from("profiles")
     .select("gold, xp, energy, level, streak_days, agent_id, display_name, training_certified, role")
     .eq("id", user.id)

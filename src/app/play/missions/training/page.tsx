@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { completeTraining } from "@/lib/actions/training";
+import { completeTraining, isTrainingCertified } from "@/lib/actions/training";
 import { useEconomy } from "@/contexts/EconomyContext";
 import { useAgent } from "@/contexts/AgentContext";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
@@ -66,12 +66,19 @@ const STATIONS = [
 
 export default function TrainingPage() {
   const { agent } = useAgent();
-  const { setGold } = useEconomy();
+  const { setGold, refreshProfile } = useEconomy();
   const [activeStation, setActiveStation] = useState<number | null>(null);
   const [completedStations, setCompletedStations] = useState<Set<string>>(new Set());
   const [isComplete, setIsComplete] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+
+  // Check if already certified on mount
+  useEffect(() => {
+    isTrainingCertified().then((certified) => {
+      if (certified) setIsComplete(true);
+    });
+  }, []);
 
   const allStationsCompleted = completedStations.size === STATIONS.length;
 
@@ -89,6 +96,8 @@ export default function TrainingPage() {
         setGold(result.data.newGold);
         setIsComplete(true);
         setError(null);
+        // Refresh profile to sync all economy values
+        refreshProfile();
       } else {
         // Already claimed is treated as complete
         if (result.error?.includes("already claimed")) {

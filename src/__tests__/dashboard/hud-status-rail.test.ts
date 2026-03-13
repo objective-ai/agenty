@@ -96,11 +96,10 @@ describe("BridgeSidebar component", () => {
     expect(content).toContain("agent.color");
   });
 
-  it("has Missions, Inventory, and Lab navigation links", () => {
+  it("has Missions and Inventory navigation links", () => {
     const content = readFileSync(filePath, "utf-8");
     expect(content).toContain("MISSIONS");
     expect(content).toContain("INVENTORY");
-    expect(content).toContain("LAB");
   });
 
   it("uses usePathname for active link detection", () => {
