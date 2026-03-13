@@ -42,3 +42,15 @@ next-env.d.ts
 
 # git worktrees
 .worktrees/
+
+# playwright CLI
+.playwright-cli/
+
+# downloaded files
+_downloaded/
+
+# supabase temp
+supabase/.temp/
+
+# superpowers brainstorm
+.superpowers/
