@@ -304,7 +304,7 @@ export function CommsPanel({ missionConfig, dispatchMission, isDamaged, shields 
           <motion.button
             type="submit"
             disabled={isLoading || !inputValue.trim()}
-            className="min-h-[44px] rounded-xl border-2 px-4 py-2 font-mono text-xs font-black uppercase tracking-widest hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-[44px] min-w-[44px] rounded-xl border-2 px-4 py-2 font-mono text-xs font-black uppercase tracking-widest hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
             style={{
               borderColor: agent.color,
               backgroundColor: `${agent.color}22`,

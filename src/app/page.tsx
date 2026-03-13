@@ -103,7 +103,7 @@ function KeyButton({
       `}
       whileTap={{
         scale: 0.95,
-        boxShadow: "0 0 20px rgba(59, 130, 246, 0.6)",
+        boxShadow: "0 0 20px rgba(245, 197, 66, 0.6)",
       }}
       transition={{ type: "spring", stiffness: 400, damping: 17 }}
     >
